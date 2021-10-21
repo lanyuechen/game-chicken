@@ -11,9 +11,13 @@ export default class Rectangle extends PIXI.Graphics {
 
     this.draw();
 
-    this.on('pointertap', () => {
+    this.on('pointerdown', () => {
       this.draw(true);
-    });
+    }).on('pointerup', () => {
+      this.draw();
+    }).on('pointerupoutside', () => {
+      this.draw();
+    })
   }
 
   draw(active) {

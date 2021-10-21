@@ -8,6 +8,8 @@ export default class Plane extends PIXI.Container {
   constructor(gridX = 0, gridY = 0, gridWidth = 20) {
     super();
 
+    this.interactive = true;
+
     this.gridWidth = gridWidth;
     this.gridX = gridX;
     this.gridY = gridY;
@@ -21,7 +23,25 @@ export default class Plane extends PIXI.Container {
       [0, 1, 1, 1, 0],
     ];
 
+    this.on('pointerdown', this.handleDragStart)
+        .on('pointerup', this.handleDragEnd)
+        .on('pointerupoutside', this.handleDragEnd);
+
     this.draw();
+  }
+
+  handleDragStart() {
+    console.log('drag start');
+    this.on('pointermove', this.handleDragMove);
+  }
+
+  handleDragEnd() {
+    console.log('drag end');
+    this.off('pointermove', this.handleDragMove);
+  }
+
+  handleDragMove() {
+    console.log('drag move');
   }
 
   draw() {

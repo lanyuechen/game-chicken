@@ -16,18 +16,21 @@ export default class AirWar extends Stage {
     this.col = col;
     this.gridWidth = this.stageWidth / col;
 
-    this.board = new Array(row);
-    for (let i = 0; i < row; i++) {
-      this.board[i] = new Array(col).fill(0);
-    }
+    this.board = this.initBoard(row, col);
 
-    const grid = new Grid(row, col, this.gridWidth);
-
-    this.addChild(grid);
+    this.addChild(new Grid(row, col, this.gridWidth));
     this.addPlane(new Plane(0, 1, this.gridWidth));
     this.addPlane(new Plane(3, 0, this.gridWidth));
 
   };
+
+  initBoard(row, col) {
+    const board = new Array(row);
+    for (let i = 0; i < row; i++) {
+      board[i] = new Array(col).fill(0);
+    }
+    return board;
+  }
 
   addPlane(plane) {
     if (this.isCollision(plane)) {
