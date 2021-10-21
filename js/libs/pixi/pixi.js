@@ -8,6 +8,8 @@
 window.PIXI = (function (exports) {
   'use strict';
 
+  window.self = window;
+
   /**
    * @this {Promise}
    */

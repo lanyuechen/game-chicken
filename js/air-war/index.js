@@ -1,3 +1,4 @@
+import Stage from './stage';
 import Grid from './grid';
 import Plane from './plane';
 
@@ -6,35 +7,29 @@ const defaultOptions = {
   col: 10,
 }
 
-export default class AirWar extends PIXI.Container {
+export default class AirWar extends Stage {
   constructor(options = defaultOptions) {
     super();
     const { row, col } = options;
+
     this.row = row;
     this.col = col;
-    
-    const { windowWidth, windowHeight } = wx.getSystemInfoSync();
-    const gridWidth = Math.min(windowWidth / col, windowHeight / row);
-    this.gridWidth = gridWidth;
+    this.gridWidth = this.stageWidth / col;
 
     this.board = new Array(row);
     for (let i = 0; i < row; i++) {
       this.board[i] = new Array(col).fill(0);
     }
 
-    const plane = new Plane(0, 1, gridWidth);
-    const plane2 = new Plane(3, 0, gridWidth);
-
-    const grid = new Grid(row, col, gridWidth);
+    const grid = new Grid(row, col, this.gridWidth);
 
     this.addChild(grid);
-    this.addPlane(plane);
-    this.addPlane(plane2);
+    this.addPlane(new Plane(0, 1, this.gridWidth));
+    this.addPlane(new Plane(3, 0, this.gridWidth));
 
   };
 
   addPlane(plane) {
-    console.log('=====', this.board)
     if (this.isCollision(plane)) {
       return;
     }

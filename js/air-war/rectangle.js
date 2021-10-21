@@ -18,7 +18,7 @@ export default class Rectangle extends PIXI.Graphics {
 
   draw(active) {
     this.clear();
-    this.lineStyle(1);
+    this.lineStyle(1, this.color);
     this.beginFill(this.color, active ? 0.2 : 0.05);
     this.drawRect(this.col * this._width, this.row * this._width, this._width, this._width);
     this.endFill();
