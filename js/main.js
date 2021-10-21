@@ -1,4 +1,4 @@
-import Grid from './air-war/grid';
+import AirWar from './air-war/index';
 
 export default class Main {
   constructor() {
@@ -10,9 +10,9 @@ export default class Main {
       backgroundColor: 0xffffff
     });
 
-    const grid = new Grid(4, 6);
+    const airWar = new AirWar();
 
-    this.app.stage.addChild(grid);
+    this.app.stage.addChild(airWar);
 
   }
 }
