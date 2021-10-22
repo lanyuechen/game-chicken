@@ -19,9 +19,20 @@ export default class AirWar extends Stage {
     this.board = this.initBoard(row, col);
 
     this.addChild(new Grid(row, col, this.gridWidth));
-    this.addPlane(new Plane(0, 1, this.gridWidth));
-    this.addPlane(new Plane(3, 0, this.gridWidth));
 
+    this.planes = [];
+    for (let i = 0; i < 2; i++) {
+      const plane = new Plane({
+        gridWidth: this.gridWidth,
+        draggable: true,
+        onDragStart: (plane) => this.handleDragStart(plane),
+        onDragEnd: (plane) => this.handleDragEnd(plane),
+      });
+      plane.y = row * this.gridWidth + this.margin;
+  
+      this.planes.push(plane);
+      this.addChild(plane);
+    }
   };
 
   initBoard(row, col) {
@@ -32,35 +43,51 @@ export default class AirWar extends Stage {
     return board;
   }
 
-  addPlane(plane) {
+  handleDragStart(plane) {
+    this.setBoard(plane, false);
+  }
+
+  handleDragEnd(plane) {
+    const { x, y, gridWidth } = plane;
+    const gx = Math.round(x / gridWidth);
+    const gy = Math.round(y / gridWidth);
+    
     if (this.isCollision(plane)) {
-      return;
+      plane.x = plane.oldPosition.x;
+      plane.y = plane.oldPosition.y;
+    } else {
+      plane.x = gx * gridWidth;
+      plane.y = gy * gridWidth;
     }
 
+    this.setBoard(plane, true);
+  }
+
+  setBoard(plane, s) {
+    const gx = parseInt(plane.x / plane.gridWidth);
+    const gy = parseInt(plane.y / plane.gridWidth);
     plane._matrix.forEach((m, i) => {
       m.forEach((k ,j) => {
-        this.board[plane.gridY + i][plane.gridX + j] = k;
+        if (k > 0 && this.board[gy + i] && typeof this.board[gy + i][gx + j] !== undefined) {
+          this.board[gy + i][gx + j] = s ? k : 0;
+        }
       });
     });
-
-    this.addChild(plane);
   }
 
   isCollision(plane) {
-    const m = plane._matrix;
+    const row = plane._matrix.length;
+    const col = plane._matrix[0].length;
+    const gx = parseInt(plane.x / plane.gridWidth);
+    const gy = parseInt(plane.y / plane.gridWidth);
 
-    if (
-      plane.gridX < 0 ||
-      plane.gridX + m.length > this.col ||
-      plane.gridY < 0 ||
-      plane.gridY + m[0].length > this.row
-    ) {
+    if (gx < 0 || gx + col > this.col || gy < 0 || gy + row > this.row) {
       return true;
     }
 
-    for (let i = 0; i < m.length; i++) {
-      for (let j = 0; j < m[i].length; j++) {
-        if (m[i][j] > 0 && this.board[plane.gridY + i][plane.gridX + j] > 0) {
+    for (let i = 0; i < row; i++) {
+      for (let j = 0; j < col; j++) {
+        if (plane._matrix[i][j] > 0 && this.board[gy + i][gx + j] > 0) {
           return true;
         }
       }

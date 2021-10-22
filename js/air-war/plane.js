@@ -5,16 +5,19 @@ const randomColor = () => {
 }
 
 export default class Plane extends PIXI.Container {
-  constructor(gridX = 0, gridY = 0, gridWidth = 20) {
+  constructor(options = {}) {
     super();
 
+    const { gridWidth = 20, draggable, onDragStart, onDrag, onDragEnd } = options;
+
     this.interactive = true;
+    this.buttonMode = true;
 
     this.gridWidth = gridWidth;
-    this.gridX = gridX;
-    this.gridY = gridY;
-    this.x = gridX * gridWidth;
-    this.y = gridY * gridWidth;
+    this.draggable = draggable;
+    this.onDragStart = onDragStart;
+    this.onDrag = onDrag;
+    this.onDragEnd = onDragEnd;
 
     this._matrix = [
       [0, 0, 2, 0, 0],
@@ -23,25 +26,44 @@ export default class Plane extends PIXI.Container {
       [0, 1, 1, 1, 0],
     ];
 
-    this.on('pointerdown', this.handleDragStart)
-        .on('pointerup', this.handleDragEnd)
-        .on('pointerupoutside', this.handleDragEnd);
+    if (draggable) {
+      this.on('pointerdown', this.handleDragStart);
+      this.on('pointerup', this.handleDragEnd);
+      this.on('pointerupoutside', this.handleDragEnd);
+    }
 
     this.draw();
   }
 
-  handleDragStart() {
-    console.log('drag start');
+  handleDragStart(event) {
+    this.data = event.data;
+    this.offset = event.data.getLocalPosition(this);
+    this.oldPosition = { x: this.x, y: this.y };
+    this.alpha = 0.5;
+    this.dragging = true;
+    this.onDragStart && this.onDragStart(this);
     this.on('pointermove', this.handleDragMove);
   }
 
   handleDragEnd() {
-    console.log('drag end');
-    this.off('pointermove', this.handleDragMove);
+    if (this.dragging) {
+      this.onDragEnd && this.onDragEnd(this);
+      this.alpha = 1;
+      this.dragging = false;
+      this.data = null;
+      this.offset = null;
+      this.oldPosition = null;
+      this.off('pointermove', this.handleDragMove);
+    }
   }
 
   handleDragMove() {
-    console.log('drag move');
+    if (this.dragging) {
+      const { x, y } = this.data.getLocalPosition(this.parent);
+      this.x = x - this.offset.x;
+      this.y = y - this.offset.y;
+      this.onDrag && this.onDrag(this);
+    }
   }
 
   draw() {
