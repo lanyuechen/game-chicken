@@ -1,8 +1,6 @@
 import Rectangle from "./rectangle";
 
-const randomColor = () => {
-  return Math.floor(Math.random() * 2 ** 24)
-}
+import { rotateMatrix } from '../utils/utils';
 
 export default class Plane extends PIXI.Container {
   constructor(options = {}) {
@@ -32,6 +30,11 @@ export default class Plane extends PIXI.Container {
       this.on('pointerupoutside', this.handleDragEnd);
     }
 
+    this.draw();
+  }
+
+  rotatePlane() {
+    this._matrix = rotateMatrix(this._matrix);
     this.draw();
   }
 
@@ -67,11 +70,11 @@ export default class Plane extends PIXI.Container {
   }
 
   draw() {
-    const color = randomColor();
+    this.removeChildren();
     this._matrix.forEach((m, i) => {
       m.forEach((k, j) => {
         if (k > 0) {
-          this.addChild(new Rectangle(i, j, this.gridWidth, color));
+          this.addChild(new Rectangle(i, j, this.gridWidth, 0x0));
         }
       });
     });
