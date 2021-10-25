@@ -8,11 +8,6 @@
 window.PIXI = (function (exports) {
   'use strict';
 
-  // ------------- lanyuechen start -------------
-  window.self = window;
-  window.XMLDocument = function () {};
-  // ------------- lanyuechen end -------------
-
   /**
    * @this {Promise}
    */

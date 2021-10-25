@@ -12,11 +12,11 @@ import Home from './scenes/home.js';
 export default class App extends PIXI.Application {
   constructor() {
     super({
-        view: canvas,
-        width: config.GAME_WIDTH,
-        height: config.GAME_HEIGHT,
-        antialias: true,
-        backgroundColor: 0xffffff,
+      view: canvas,
+      width: config.GAME_WIDTH,
+      height: config.GAME_HEIGHT,
+      antialias: true,
+      backgroundColor: 0xffffff,
     });
 
     this.bindWxEvents();
@@ -35,20 +35,13 @@ export default class App extends PIXI.Application {
   }
 
   runScene(Scene) {
-    let old = this.stage.getChildByName('scene');
-
-    while (old) {
-      if (old._destroy) {
-        old._destroy();
-      }
+    const old = this.stage.getChildByName('scene');
+    if (old) {
       old.destroy(true);
-      this.stage.removeChild(old);
-      old = this.stage.getChildByName('scene');
     }
 
-    let scene = new Scene();
-    scene.name = 'scene';
-    scene.sceneName = Scene.name;
+    const scene = new Scene();
+    scene.name = scene.sceneName = 'scene';
     scene.launch(gameServer);
     this.stage.addChild(scene);
 
