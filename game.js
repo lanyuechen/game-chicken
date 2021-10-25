@@ -1,8 +1,7 @@
-import './js/libs/wechat-adapter/index';
-import './js/libs/symbol';
-import './js/libs/pixi/pixi';
-import './js/libs/pixi/unsafe-eval/unsafe-eval.min';
+import './libs/wechat-adapter/index';
+import './libs/pixi';
+import './libs/unsafe-eval.min';
 
-import Main from './js/main';
+import App from './src/index';
 
-new Main();
+new App();
