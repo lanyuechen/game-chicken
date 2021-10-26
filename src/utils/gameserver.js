@@ -19,10 +19,13 @@ class GameServer {
 
     // 用于标记帧同步房间是否真正开始，如果没有开始，不能发送指令，玩家不能操作
     this.hasGameStart = false;
+
     // 帧同步帧率
     this.fps = 30;
+
     // 逻辑帧的时间间隔
     this.frameInterval = parseInt(1000 / this.fps);
+
     // 为了防止网络抖动设置的帧缓冲数，类似于放视频
     this.frameJitLenght = 2;
 
@@ -30,10 +33,13 @@ class GameServer {
 
     // 用于标识是否重连中
     this.reconnecting = false;
+
     // 重连回包后，用于标识重连完成的帧号
     this.reconnectMaxFrameId = 0;
+
     // 重连成功次数
     this.reconnectSuccess = 0;
+
     // 重连失败次数
     this.reconnectFail = 0;
 
@@ -41,6 +47,7 @@ class GameServer {
     this.bindEvents();
 
     this.isConnected = true;
+
     // 记录网路状态
     wx.getNetworkType({
       success: (res) => {
@@ -68,52 +75,25 @@ class GameServer {
       console.log('来自系统的onStart');
     });
 
-    const reconnect = () => {
-      // 如果logout了，需要先logout再connect
-      if (this.isLogout && this.isDisconnect) {
-        this.server
-          .login()
-          .then((res) => {
-            console.log('networkType change or onShow -> login', res);
-            this.server.reconnect().then((res) => {
-              console.log('networkType change or onShow -> reconnect', res);
-              ++this.reconnectSuccess;
-              wx.showToast({
-                title: '游戏已连接',
-                icon: 'none',
-                duration: 2000,
-              });
-            });
-          })
-          .catch((e) => ++reconnectFail);
-      } else {
-        // 否则只需要处理对应的掉线事件
-        if (this.isLogout) {
-          this.server
-            .login()
-            .then((res) => console.log('networkType change or onShow -> login', res));
-        }
-
-        if (this.isDisconnect) {
-          this.server
-            .reconnect()
-            .then((res) => {
-              ++this.reconnectSuccess;
-              console.log('networkType change or onShow -> reconnect', res);
-              wx.showToast({
-                title: '游戏已连接',
-                icon: 'none',
-                duration: 2000,
-              });
-            })
-            .catch((e) => ++reconnectFail);
-        }
+    const reconnect = async () => {
+      if (this.isLogout) {
+        const res = await this.server.login();
+        console.log('networkType change or onShow -> login', res);
+      }
+      if (this.isDisconnect) {
+        const res = await this.server.reconnect();
+        console.log('networkType change or onShow -> reconnect', res);
+        ++this.reconnectSuccess;
+        wx.showToast({
+          title: '游戏已连接',
+          icon: 'none',
+          duration: 2000,
+        });
       }
     };
 
-    wx.onNetworkStatusChange((res) => {
-      console.log('当前是否有网路连接', res.isConnected);
-      let isConnected = res.isConnected;
+    wx.onNetworkStatusChange(({ isConnected }) => {
+      console.log('当前是否有网路连接', isConnected);
 
       console.log('当前状态', this.isLogout, this.isDisconnect, this.isConnected);
 
@@ -133,13 +113,13 @@ class GameServer {
     this.server.onDisconnect((res) => {
       console.log('onDisconnect', res);
       this.isDisconnect = true;
-      res.type !== 'game' &&
+      if (res.type !== 'game') {
         wx.showToast({
           title: '游戏已掉线...',
           icon: 'none',
           duration: 2e3,
         });
-      res.type === 'game' &&
+      } else {
         (function (that) {
           function relink() {
             that.server
@@ -152,6 +132,7 @@ class GameServer {
           }
           relink();
         })(this);
+      }
     });
 
     wx.onShow(() => {

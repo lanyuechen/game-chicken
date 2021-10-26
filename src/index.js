@@ -1,13 +1,13 @@
-import config from './config.js';
+import config from '@/config.js';
 import databus from '@/utils/databus';
-import BackGround from './base/bg.js';
-import Tween from './base/tween.js';
+import BackGround from '@/base/bg.js';
+import Tween from '@/base/tween.js';
 import gameServer from '@/utils/gameserver';
-import login from './base/login.js';
-import Room from './scenes/room.js';
-import Battle from './scenes/battle.js';
-// import Result      from './scenes/result.js';
-import Home from './scenes/home.js';
+import login from '@/base/login.js';
+import Room from '@/scenes/room.js';
+import Battle from '@/scenes/battle.js';
+// import Result      from '@/scenes/result.js';
+import Home from '@/scenes/home.js';
 
 export default class App extends PIXI.Application {
   constructor() {
@@ -30,8 +30,7 @@ export default class App extends PIXI.Application {
     this.aniId = null;
     this.bindLoop = this.loop.bind(this);
 
-    config.resources.forEach((item) => PIXI.Loader.shared.add(item));
-    PIXI.Loader.shared.load(this.init.bind(this));
+    PIXI.Loader.shared.add(config.resources).load(this.init.bind(this));
   }
 
   runScene(Scene) {
@@ -150,15 +149,15 @@ export default class App extends PIXI.Application {
   bindWxEvents() {
     wx.onShow((res) => {
       console.log('wx.onShow', res);
-      let accessInfo = res.query.accessInfo;
+      const accessInfo = res.query.accessInfo;
 
-      if (!accessInfo) return;
+      if (!accessInfo) {
+        return;
+      }
 
       if (!databus.currAccessInfo) {
         databus.currAccessInfo = accessInfo;
-
         this.joinToRoom();
-
         return;
       }
 
@@ -167,19 +166,22 @@ export default class App extends PIXI.Application {
           title: '温馨提示',
           content: '你要离开当前房间，接受对方的对战邀请吗？',
           success: (res) => {
-            if (!res.confirm) return;
-            let room =
+            if (!res.confirm) {
+              return;
+            }
+            const room =
               databus.selfMemberInfo.role === config.roleMap.owner
                 ? 'ownerLeaveRoom'
                 : 'memberLeaveRoom';
 
             gameServer[room]((res) => {
-              if (res.errCode)
+              if (res.errCode) {
                 return wx.showToast({
                   title: '离开房间失败！',
                   icon: 'none',
                   duration: 2000,
                 });
+              }
 
               databus.currAccessInfo = accessInfo;
 
