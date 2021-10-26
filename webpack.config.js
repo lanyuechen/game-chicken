@@ -1,7 +1,8 @@
 const webpack = require('webpack');
 const path = require('path');
-const CopyPlugin = require("copy-webpack-plugin");
+const CopyPlugin = require('copy-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const WebpackBar = require('webpackbar');
 
 module.exports = {
   mode: 'development',
@@ -21,6 +22,7 @@ module.exports = {
     ],
   },
   plugins: [
+    new WebpackBar(),
     new webpack.ProvidePlugin({
       PIXI: 'pixi.js',
     }),
@@ -38,4 +40,10 @@ module.exports = {
       ],
     }),
   ],
+  resolve: {
+    // 设置别名
+    alias: {
+      '@': path.resolve(__dirname, 'src'),
+    },
+  },
 };
