@@ -7,10 +7,10 @@ import {
     getNumInRange,
     limitNumInRange,
     getMove
-} from '../common/util.js';
+} from '@/utils/utils';
 
 import Bullet  from '../base/bullet.js';
-import databus from '../databus.js';
+import databus from '@/utils/databus';
 import music   from '../base/music.js';
 
 const dpr = 2;

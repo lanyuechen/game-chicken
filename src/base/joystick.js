@@ -1,11 +1,11 @@
 import config    from '../config.js';
 import Tween     from './tween.js';
-import { createCircle } from '../common/ui.js';
+import { createCircle } from '@/utils/ui';
 import {
     none,
     convertRadian2Degree,
     convertDegree2Radian
-} from '../common/util.js';
+} from '@/utils/utils';
 
 const dpr = 2;
 

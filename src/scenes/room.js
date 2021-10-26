@@ -1,7 +1,7 @@
 import config     from '../config.js';
-import { createBtn } from '../common/ui.js';
-import databus    from '../databus.js';
-import { showTip } from '../common/util.js';
+import { createBtn } from '@/utils/ui';
+import databus from '@/utils/databus';
+import { showTip } from '@/utils/utils';
 
 const emptyUser = {
     nickname: '点击邀请好友',

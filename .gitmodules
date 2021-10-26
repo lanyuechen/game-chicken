@@ -1,3 +1,0 @@
-[submodule "src/libs/weapp-adapter"]
-	path = src/libs/weapp-adapter
-	url = git@github.com:lanyuechen/weapp-adapter.git

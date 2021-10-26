@@ -1,5 +1,5 @@
 import config     from '../config.js';
-import { createBtn } from '../common/ui.js';
+import { createBtn } from '@/utils/ui';
 
 export default class Result extends PIXI.Container {
     constructor() {

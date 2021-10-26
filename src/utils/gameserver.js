@@ -1,6 +1,6 @@
 import config from '@/config';
-import databus from '@/databus';
-import { compareVersion, showTip } from '@/common/util';
+import databus from '@/utils/databus';
+import { compareVersion, showTip } from '@/utils/utils';
 
 class GameServer {
   constructor() {

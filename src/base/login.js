@@ -1,7 +1,7 @@
 import {
     none
-} from '../common/util.js';
-import databus from '../databus.js';
+} from '@/utils/utils';
+import databus from '@/utils/databus';
 
 class Login {
     constructor() {

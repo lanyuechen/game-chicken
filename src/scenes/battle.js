@@ -3,18 +3,18 @@ import JoyStick   from '../base/joystick.js'
 import Player     from '../base/player.js';
 import Skill      from '../base/skill.js';
 import Hp         from '../base/hp.js'
-import databus    from '../databus.js';
-import { createBtn } from '../common/ui.js';
+import databus from '@/utils/databus';
+import { createBtn } from '@/utils/ui';
 
 import {
     checkCircleCollision,
-} from '../common/util.js';
+} from '@/utils/utils';
 
 import Debug from '../base/debug.js';
 
 import {
     createText
-} from '../common/ui.js';
+} from '@/utils/ui';
 
 export default class Battle extends PIXI.Container {
     constructor() {

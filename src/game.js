@@ -1,5 +1,5 @@
-import '@/libs/weapp-adapter/src/index';
-import '@/libs/pixi-adapter';
+import '@/adapter/weapp-adapter/src/index';
+import '@/adapter/pixi-adapter';
 
 import App from '@/index';
 

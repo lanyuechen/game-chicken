@@ -1,6 +1,6 @@
 import config     from '../config.js';
-import databus    from '../databus.js';
-import { createBtn, createText } from '../common/ui.js';
+import databus from '@/utils/databus';
+import { createBtn, createText } from '@/utils/ui';
 
 import Debug from '../base/debug.js';
 

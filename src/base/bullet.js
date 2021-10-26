@@ -1,10 +1,10 @@
 import config    from '../config.js';
-import databus   from '../databus.js';
+import databus from '@/utils/databus';
 import {
     velocityDecomposition,
     getDistance,
     getNumInRange,
-} from '../common/util.js';
+} from '@/utils/utils';
 
 const dpr = 2;
 

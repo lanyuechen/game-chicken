@@ -2,7 +2,7 @@ import config from '../config.js';
 
 import {
     createText
-} from '../common/ui.js';
+} from '@/utils/ui';
 
 export default class Battle extends PIXI.Container {
     constructor() {
