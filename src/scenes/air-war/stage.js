@@ -1,4 +1,3 @@
-
 export default class Stage extends PIXI.Container {
   constructor({ margin } = {}) {
     super();

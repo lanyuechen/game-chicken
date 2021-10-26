@@ -1,4 +1,3 @@
-
 export default class Hp extends PIXI.Sprite {
     constructor(options={}) {
         super();

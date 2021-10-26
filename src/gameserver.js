@@ -1,4 +1,4 @@
-import compareVersion  from '../libs/compareVersion.js';
+import compareVersion  from './libs/compareVersion.js';
 import config    from './config.js';
 import databus   from './databus.js'
 import {
