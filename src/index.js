@@ -53,13 +53,12 @@ export default class App extends PIXI.Application {
       .joinRoom(databus.currAccessInfo)
       .then((res) => {
         wx.hideLoading();
-        let data = res.data || {};
+        const data = res.data || {};
+        console.log('join', data);
 
         databus.selfClientId = data.clientId;
         gameServer.accessInfo = databus.currAccessInfo;
         this.runScene(Room);
-
-        console.log('join', data);
       })
       .catch((e) => {
         console.log(e);

@@ -478,7 +478,7 @@ class GameServer {
   }
 
   execFrame() {
-    let frame = this.frames.shift();
+    const frame = this.frames.shift();
 
     // 每次执行逻辑帧，将指令同步后，演算游戏状态
     databus.gameInstance.logicUpdate(this.frameInterval, frame.frameId);

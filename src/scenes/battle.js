@@ -183,11 +183,11 @@ export default class Battle extends PIXI.Container {
 
     // 收到第一帧开始倒计时
     if (frameId === 1) {
-      this.addCountdown(1);
+      this.addCountdown(3);
     }
 
     // 倒计时后允许操作
-    if (frameId === parseInt(1000 / this.gameServer.fps)) {
+    if (frameId === parseInt(3000 / this.gameServer.fps)) {
       console.log('joystick enable');
       this.joystick.enable();
       this.skill.enable();
