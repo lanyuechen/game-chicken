@@ -1,7 +1,7 @@
 import config from '@/config';
 import gameServer from '@/core/game-server';
-
 import databus from '@/core/databus';
+
 import { createBtn } from '@/utils/ui';
 import { showTip } from '@/utils/utils';
 
@@ -196,10 +196,10 @@ export default class Room extends PIXI.Container {
     // 每次房间信息更新重刷UI
     gameServer.event.on('onRoomInfoChange', this.onRoomInfoChangeHandler);
 
-    !databus.matchPattern &&
+    if (!databus.matchPattern) {
       gameServer.getRoomInfo(this.accessInfo).then((res) => {
-        console.log('getRoomInfo', res);
         this.handleRoomInfo(res);
       });
+    } 
   }
 }

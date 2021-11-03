@@ -95,7 +95,7 @@ export default class extends PIXI.Application {
     }
   }
 
-  joinRoom(accessInfo) {
+  joinRoom() {
     wx.showLoading({ title: '加入房间中' });
     return gameServer
       .joinRoom(databus.currAccessInfo)

@@ -18,7 +18,7 @@ class DataBus {
     this.selfClientId = 1;
     this.selfMemberInfo = {};
     this.debugMsg = [];
-    this.matchPattern = void 0;
+    this.matchPattern = void 0;   // 为真时表示自动匹配
   }
 
   /**
