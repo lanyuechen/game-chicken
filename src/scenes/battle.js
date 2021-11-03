@@ -1,10 +1,12 @@
 import config from '@/config';
+import gameServer from '@/core/game-server';
+
 import JoyStick from '@/base/joystick';
 import Player from '@/base/player';
 import Skill from '@/base/skill';
 import Hp from '@/base/hp';
 import Debug from '@/base/debug';
-import databus from '@/utils/databus';
+import databus from '@/core/databus';
 import { createBtn, createText } from '@/utils/ui';
 import { checkCircleCollision } from '@/utils/utils';
 
@@ -13,9 +15,7 @@ export default class Battle extends PIXI.Container {
     super();
   }
 
-  launch(gameServer) {
-    this.gameServer = gameServer;
-
+  launch() {
     this.debug = new Debug();
     this.addChild(this.debug);
 
@@ -62,7 +62,7 @@ export default class Battle extends PIXI.Container {
   }
 
   onRoomInfoChange() {
-    this.gameServer.event.on(
+    gameServer.event.on(
       'onRoomInfoChange',
       ((res) => {
         res.memberList.length < 2 && this.showModal('对方已离开房间，无法继续进行PK！', true);
@@ -71,7 +71,7 @@ export default class Battle extends PIXI.Container {
   }
 
   initPlayer() {
-    let memberList = this.gameServer.roomInfo.memberList || [];
+    let memberList = gameServer.roomInfo.memberList || [];
 
     memberList.forEach((member, index) => {
       let { role, clientId, nickname, isReady } = member;
@@ -187,7 +187,7 @@ export default class Battle extends PIXI.Container {
     }
 
     // 倒计时后允许操作
-    if (frameId === parseInt(3000 / this.gameServer.fps)) {
+    if (frameId === parseInt(3000 / gameServer.fps)) {
       console.log('joystick enable');
       this.joystick.enable();
       this.skill.enable();
@@ -211,8 +211,8 @@ export default class Battle extends PIXI.Container {
           player.hpRender.updateHp(player.hp);
 
           if (player.hp <= 0) {
-            this.gameServer.settle();
-            this.gameServer.endGame();
+            gameServer.settle();
+            gameServer.endGame();
           }
         }
       });
@@ -238,9 +238,9 @@ export default class Battle extends PIXI.Container {
       success: (res) => {
         if (res.confirm) {
           if (databus.selfMemberInfo.role === config.roleMap.owner) {
-            this.gameServer.ownerLeaveRoom();
+            gameServer.ownerLeaveRoom();
           } else {
-            this.gameServer.memberLeaveRoom();
+            gameServer.memberLeaveRoom();
           }
         }
       },
@@ -248,6 +248,6 @@ export default class Battle extends PIXI.Container {
   }
 
   _destroy() {
-    this.gameServer.event.off('onRoomInfoChange');
+    gameServer.event.off('onRoomInfoChange');
   }
 }

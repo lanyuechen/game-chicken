@@ -1,5 +1,7 @@
-import config from '@/config.js';
-import databus from '@/utils/databus';
+import config from '@/config';
+import gameServer from '@/core/game-server';
+
+import databus from '@/core/databus';
 import { createBtn } from '@/utils/ui';
 import { showTip } from '@/utils/utils';
 
@@ -13,8 +15,6 @@ const emptyUser = {
 export default class Room extends PIXI.Container {
   constructor() {
     super();
-
-    this.gameServer = null;
   }
 
   initUI() {
@@ -41,17 +41,17 @@ export default class Room extends PIXI.Container {
           success: (res) => {
             if (res.confirm) {
               if (databus.matchPattern) {
-                this.gameServer.cancelMatch({
+                gameServer.cancelMatch({
                   match_id: 'CuQJHh6u_WqqGQ1UEzMhnfeIIgqdgCAqw12FNbl6l3E',
                 });
-                this.gameServer.clear();
+                gameServer.clear();
                 return;
               }
 
               if (databus.selfMemberInfo.role === config.roleMap.owner) {
-                this.gameServer.ownerLeaveRoom();
+                gameServer.ownerLeaveRoom();
               } else {
-                this.gameServer.memberLeaveRoom();
+                gameServer.memberLeaveRoom();
               }
             }
           },
@@ -72,7 +72,7 @@ export default class Room extends PIXI.Container {
       x: config.GAME_WIDTH / 2 - 159,
       y: config.GAME_HEIGHT - 160,
       onclick: () => {
-        this.gameServer.updateReadyStatus(!isReady);
+        gameServer.updateReadyStatus(!isReady);
       },
     });
 
@@ -84,7 +84,7 @@ export default class Room extends PIXI.Container {
         if (!this.allReady) {
           showTip('全部玩家准备后方可开始');
         } else {
-          this.gameServer.server.broadcastInRoom({
+          gameServer.server.broadcastInRoom({
             msg: 'START',
           });
         }
@@ -171,7 +171,7 @@ export default class Room extends PIXI.Container {
         user.on('pointerdown', () => {
           wx.shareAppMessage({
             title: '帧同步demo',
-            query: 'accessInfo=' + this.gameServer.accessInfo,
+            query: 'accessInfo=' + gameServer.accessInfo,
             imageUrl: 'https://res.wx.qq.com/wechatgame/product/luban/assets/img/sprites/bk.jpg',
           });
         });
@@ -182,7 +182,7 @@ export default class Room extends PIXI.Container {
   }
 
   _destroy() {
-    this.gameServer.event.off('onRoomInfoChange');
+    gameServer.event.off('onRoomInfoChange');
   }
 
   onRoomInfoChange(roomInfo) {
@@ -190,8 +190,7 @@ export default class Room extends PIXI.Container {
     this.handleRoomInfo({ data: { roomInfo } });
   }
 
-  launch(gameServer) {
-    this.gameServer = gameServer;
+  launch() {
     this.onRoomInfoChangeHandler = this.onRoomInfoChange.bind(this);
 
     // 每次房间信息更新重刷UI

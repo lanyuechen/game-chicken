@@ -1,5 +1,5 @@
 import config from '@/config';
-import databus from '@/utils/databus';
+import databus from '@/core/databus';
 import { compareVersion, showTip } from '@/utils/utils';
 
 class GameServer {

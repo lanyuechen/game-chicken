@@ -10,7 +10,7 @@ class DataBus {
 
   reset() {
     this.gameover = false;
-    this.currAccessInfo = '';
+    this.currAccessInfo = '';     // 加入房间必须
     this.bullets = [];
     this.playerMap = {};
     this.playerList = [];

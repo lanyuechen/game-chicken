@@ -1,5 +1,7 @@
-import config from '../config.js';
-import databus from '@/utils/databus';
+import config from '@/config';
+import gameServer from '@/core/game-server';
+
+import databus from '@/core/databus';
 import { createBtn, createText } from '@/utils/ui';
 
 import Debug from '../base/debug.js';
@@ -10,6 +12,11 @@ export default class Home extends PIXI.Container {
 
     this.debug = new Debug();
     this.addChild(this.debug);
+  }
+
+  launch() {
+    databus.matchPattern = void 0;
+    this.appendOpBtn();
   }
 
   appendOpBtn() {
@@ -28,14 +35,14 @@ export default class Home extends PIXI.Container {
         x: config.GAME_WIDTH / 2,
         y: 442,
         onclick: () => {
-          if (this.gameServer.isVersionLow)
+          if (gameServer.isVersionLow)
             return wx.showModal({
               content: '你的微信版本过低，无法演示该功能！',
               showCancel: false,
               confirmColor: '#02BB00',
             });
 
-          this.gameServer.createMatchRoom();
+          gameServer.createMatchRoom();
         },
       }),
       createBtn({
@@ -50,18 +57,12 @@ export default class Home extends PIXI.Container {
           wx.showLoading({
             title: '房间创建中...',
           });
-          this.gameServer.createRoom({}, () => {
+          gameServer.createRoom({}, () => {
             wx.hideLoading();
             this.handling = false;
           });
         },
       }),
     );
-  }
-
-  launch(gameServer) {
-    this.gameServer = gameServer;
-    databus.matchPattern = void 0;
-    this.appendOpBtn();
   }
 }

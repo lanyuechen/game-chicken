@@ -1,4 +1,6 @@
-import config from '@/config.js';
+import config from '@/config';
+import gameServer from '@/core/game-server';
+
 import { createBtn } from '@/utils/ui';
 
 export default class Result extends PIXI.Container {
@@ -28,7 +30,7 @@ export default class Result extends PIXI.Container {
         y: config.GAME_HEIGHT - 150,
         text: '确定',
         onclick: () => {
-          this.gameServer.clear();
+          gameServer.clear();
         },
       }),
     );
@@ -64,9 +66,8 @@ export default class Result extends PIXI.Container {
     return user;
   }
 
-  launch(gameServer) {
-    this.gameServer = gameServer;
-    this.gameServer.gameResult.forEach((member) => {
+  launch() {
+    gameServer.gameResult.forEach((member) => {
       member.index = member.win ? 0 : 1;
       this.addChild(this.createOneUser(member));
     });

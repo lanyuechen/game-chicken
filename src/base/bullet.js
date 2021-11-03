@@ -1,5 +1,5 @@
 import config from '@/config.js';
-import databus from '@/utils/databus';
+import databus from '@/core/databus';
 import { velocityDecomposition, getDistance, getNumInRange } from '@/utils/utils';
 
 const dpr = 2;

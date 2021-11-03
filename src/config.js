@@ -9,6 +9,9 @@ export default {
   windowWidth: deviceinfo.windowWidth,
   windowHeight: deviceinfo.windowHeight,
 
+  VIEW_WIDTH: 667,
+  VIEW_HEIGHT: 375,
+  
   GAME_WIDTH: 667 * 2,
   GAME_HEIGHT: 375 * 2,
 

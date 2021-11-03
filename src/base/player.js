@@ -10,7 +10,7 @@ import {
 } from '@/utils/utils';
 
 import Bullet from '@/base/bullet';
-import databus from '@/utils/databus';
+import databus from '@/core/databus';
 import music from '@/base/music';
 
 const dpr = 2;
