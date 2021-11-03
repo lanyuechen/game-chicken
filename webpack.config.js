@@ -15,7 +15,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.m?js$/,
+        test: /\.jsx?$/,
         exclude: /node_modules/,
         loader: 'babel-loader',
       },
@@ -41,6 +41,7 @@ module.exports = {
     }),
   ],
   resolve: {
+    extensions: ['.js', '.jsx'],
     // 设置别名
     alias: {
       '@': path.resolve(__dirname, 'src'),

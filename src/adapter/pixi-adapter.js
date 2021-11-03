@@ -9,3 +9,5 @@ PIXI.CanvasResource.test = function (source) {
 
 window.self = window;
 window.XMLDocument = function () {};
+
+window.CustomEvent = PIXI.utils.EventEmitter;
