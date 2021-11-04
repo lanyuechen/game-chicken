@@ -4,13 +4,13 @@ import { Container, useApp } from '@inlet/react-pixi';
 import Background from './bg';
 import Home from './scenes/home';
 import Room from './scenes/room';
+import Battle from './scenes/battle';
 
 import config from '@/config';
 import gameServer from '@/core/game-server';
 import databus from '@/core/databus';
 
 import Tween from '@/base/tween';
-// import Battle from '@/scenes/battle';
 // import Result      from '@/scenes/result';
 
 export default () => {
@@ -126,6 +126,7 @@ export default () => {
       <Background image="images/bg.png" />
       {scene === 'home' && <Home />}
       {scene === 'room' && <Room />}
+      {scene === 'battle' && <Battle />}
     </Container>
   )
 }
