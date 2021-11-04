@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
-import { Container, Sprite, Text } from '@inlet/react-pixi';
+import { Container, Text } from '@inlet/react-pixi';
 
 import Debug from '@/components/debug';
+import Button from '@/components/ui/button';
 
 import config from '@/config';
 import databus from '@/core/databus';
@@ -25,11 +26,10 @@ export default () => {
           fill: '#515151',
         }}
       />
-      <Sprite
+      <Button
         image="images/quickStart.png"
         x={config.GAME_WIDTH / 2}
         y={422}
-        anchor={0.5}
         onClick={() => {
           if (gameServer.isVersionLow)
             return wx.showModal({
@@ -41,11 +41,10 @@ export default () => {
           gameServer.createMatchRoom();
         }}
       />
-      <Sprite
+      <Button
         image="images/createRoom.png"
         x={config.GAME_WIDTH / 2}
         y={582}
-        anchor={0.5}
         onClick={() => {
           // if (this.handling) {
           //   return;
