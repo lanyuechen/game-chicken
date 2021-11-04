@@ -109,7 +109,7 @@ export default () => {
             y={config.GAME_HEIGHT - 160}
             alpha={myself.isReady ? 0.5 : 1}
             onClick={() => {
-              gameServer.updateReadyStatus(!isReady);
+              gameServer.updateReadyStatus(!myself.isReady);
             }}
           />
           {myself.role === config.roleMap.owner && (
@@ -119,7 +119,7 @@ export default () => {
               y={config.GAME_HEIGHT - 160}
               alpha={!allReady ? 0.5 : 1}
               onClick={() => {
-                if (!this.allReady) {
+                if (!allReady) {
                   showTip('全部玩家准备后方可开始');
                 } else {
                   gameServer.server.broadcastInRoom({
