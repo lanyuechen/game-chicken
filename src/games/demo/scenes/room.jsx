@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Text, Sprite } from '@inlet/react-pixi';
 import Button from '@/components/ui/button';
 
@@ -17,8 +17,20 @@ const emptyUser = {
 
 const PADDING = 136;
 
-export default (props) => {
-  const { members = [] } = props;
+export default () => {
+  const [members, setMembers] = useState([]);
+
+  useEffect(() => {
+    gameServer.event.on('onRoomInfoChange', (roomInfo) => {
+      setMembers(roomInfo.memberList || []);
+    });
+
+    if (!databus.matchPattern) {
+      gameServer.getRoomInfo().then((res) => {
+        setMembers(res.data.roomInfo.memberList || []);
+      });
+    } 
+  }, []);
 
   const allReady = !members.find(member => !member.isReady);
   const myself = members.find(member => member.clientId === databus.selfClientId);
@@ -72,14 +84,14 @@ export default (props) => {
             x={144 / 2}
             y={144 + 23}
           />
-          {memeber.role === config.roleMap.owner && (
+          {member.role === config.roleMap.owner && (
             <Sprite
               image="images/hosticon.png"
               scale={0.8}
               y={-30}
             />
           )}
-          {memeber.isReady && !databus.matchPattern && (
+          {member.isReady && !databus.matchPattern && (
             <Sprite
               image="images/iconready.png"
               width={40}
