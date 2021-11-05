@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import { Sprite, Text } from '@inlet/react-pixi';
 
-export default (props) => {
+export default forwardRef((props, ref) => {
   const { image, onClick, children, style, ...otherProps } = props;
 
   return (
     <Sprite
+      ref={ref}
       image={image}
       anchor={0.5}
       interactive={typeof onClick === 'function'}
@@ -17,4 +18,4 @@ export default (props) => {
       )}
     </Sprite>
   );
-}
+});

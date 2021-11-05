@@ -16,7 +16,7 @@ import Tween from '@/base/tween';
 export default () => {
   const app = useApp();
   const [loading, setLoading] = useState(true);
-  const [scene, setScene] = useState('home');
+  const [scene, setScene] = useState('battle');
 
   useEffect(() => {
     app.onLoad = () => setLoading(false);
@@ -39,10 +39,10 @@ export default () => {
       setScene('room');
     });
 
-    // gameServer.event.on('onGameStart', () => {
-    //   setScene('battle');
-    //   databus.gameInstance = battle;
-    // });
+    gameServer.event.on('onGameStart', () => {
+      setScene('battle');
+      // databus.gameInstance = battle;
+    });
 
     gameServer.event.on('onGameEnd', () => {
       gameServer.gameResult.forEach((member) => {
@@ -124,9 +124,10 @@ export default () => {
   return (
     <Container>
       <Background image="images/bg.png" />
-      {scene === 'home' && <Home />}
+      {/* {scene === 'home' && <Home />}
       {scene === 'room' && <Room />}
-      {scene === 'battle' && <Battle />}
+      {scene === 'battle' && <Battle />} */}
+      <Battle />
     </Container>
   )
 }

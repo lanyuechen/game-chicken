@@ -28,6 +28,14 @@ export default () => {
     databus.playerList.push(player);
   }
 
+  const handleJoyStick = (e) => {
+    let evt =
+      e === -9999
+        ? { e: config.msg.MOVE_STOP, n: databus.selfClientId }
+        : { e: config.msg.MOVE_DIRECTION, n: databus.selfClientId, d: e.degree };
+    gameServer.uploadFrame([JSON.stringify(evt)]);
+  }
+
   return (
     <Container>
       <Debug />
@@ -61,7 +69,7 @@ export default () => {
           </Container>
         );
       })}
-      <JoyStick />
+      <JoyStick eventDispatch={handleJoyStick} />
     </Container>
   );
 }
@@ -73,16 +81,6 @@ class Battle extends PIXI.Container {
 
   launch() {
     this.initPlayer();
-
-    // 虚拟摇杆
-    this.joystick = new JoyStick((e) => {
-      let evt =
-        e === -9999
-          ? { e: config.msg.MOVE_STOP, n: databus.selfClientId }
-          : { e: config.msg.MOVE_DIRECTION, n: databus.selfClientId, d: e.degree };
-      gameServer.uploadFrame([JSON.stringify(evt)]);
-    });
-    this.addChild(this.joystick);
 
     // 技能按钮
     this.skill = new Skill();
