@@ -17,14 +17,12 @@ import Bullet from '@/base/bullet';
 import databus from '@/core/databus';
 import music from '@/base/music';
 
-const dpr = 2;
-
 export default forwardRef((props, ref) => {
   const { userInfo } = props;
 
   const [position, setPosition] = useState([config.GAME_WIDTH / 2, config.GAME_HEIGHT / 2]);
   const store = useStore({
-    radius: parseInt(45 * dpr / 2),
+    radius: parseInt(45 * config.dpr / 2),
     speed: 0,
     speedX: 0,
     speedY: 0,
@@ -161,7 +159,7 @@ export default forwardRef((props, ref) => {
 
   // 子弹发射点的位置
   const shootPoint = () => {
-    let half = parseInt(45 * dpr / 2);
+    let half = parseInt(45 * config.dpr / 2);
     return {
       x: x + half * Math.cos(store.rotation),
       y: y + half * Math.sin(store.rotation),
@@ -182,8 +180,8 @@ export default forwardRef((props, ref) => {
       images={['images/aircraft1.png', 'images/aircraft2.png']}
       anchor={0.5}
       rotation={0}
-      width={45 * dpr}
-      height={45 * dpr}
+      width={45 * config.dpr}
+      height={45 * config.dpr}
       position={position}
       animationSpeed={parseFloat((20 / 120).toFixed(2))}
       isPlaying

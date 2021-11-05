@@ -124,10 +124,9 @@ export default () => {
   return (
     <Container>
       <Background image="images/bg.png" />
-      {/* {scene === 'home' && <Home />}
+      {scene === 'home' && <Home />}
       {scene === 'room' && <Room />}
-      {scene === 'battle' && <Battle />} */}
-      <Battle />
+      {scene === 'battle' && <Battle />}
     </Container>
   )
 }

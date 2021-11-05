@@ -8,18 +8,16 @@ import config from '@/config';
 import Tween from '@/base/tween';
 import { none, convertRadian2Degree, convertDegree2Radian } from '@/utils/utils';
 
-const dpr = 2;
-
 // 虚拟摇杆的大小
-const JOYSTICKWIDTH = 128.7 * dpr;
-const JOYSTICKHEIGHT = 128.7 * dpr;
+const JOYSTICKWIDTH = 128.7 * config.dpr;
+const JOYSTICKHEIGHT = 128.7 * config.dpr;
 
 const RADIUS = JOYSTICKWIDTH / 2;
-const BUTTON_RADIUS = 25 * dpr;
+const BUTTON_RADIUS = 25 * config.dpr;
 
 // 虚拟摇杆的位置
-const WRAPPER_X = 40 * dpr;
-const WRAPPER_Y = config.GAME_HEIGHT - JOYSTICKHEIGHT - 40.3 * dpr;
+const WRAPPER_X = 40 * config.dpr;
+const WRAPPER_Y = config.GAME_HEIGHT - JOYSTICKHEIGHT - 40.3 * config.dpr;
 
 const CENTER = {
   x: WRAPPER_X + RADIUS,
@@ -172,8 +170,8 @@ export default (props) => {
       <Button
         ref={ele => store.button = ele}
         image="images/joystick.png"
-        width={50 * dpr}
-        height={50 * dpr}
+        width={50 * config.dpr}
+        height={50 * config.dpr}
         position={btnPos}
       />
     </Container>
