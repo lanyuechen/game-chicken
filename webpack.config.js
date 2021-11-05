@@ -37,7 +37,7 @@ module.exports = {
         './src/project.config.json',
         {
           from: './public/**/*',
-          to({ context, absoluteFilename }) {
+          to({ absoluteFilename }) {
             return absoluteFilename.replace('/public', '/dist');
           },
         },
