@@ -5,7 +5,7 @@ const deviceinfo = getDeviceInfo();
 export default {
   debug: true,
 
-  dpr: deviceinfo.devicePixelRatio,
+  dpr: 2,
   windowWidth: deviceinfo.windowWidth,
   windowHeight: deviceinfo.windowHeight,
 
