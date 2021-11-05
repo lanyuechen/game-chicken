@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useImperativeHandle, forwardRef, useState } 
 import { Container, Text } from '@inlet/react-pixi';
 import Debug from '@/components/debug';
 import * as modal from '@/components/ui/modal';
+import Button from '@/components/ui/button';
 import Player from '../base/player';
 import Hp from '../base/hp';
 import JoyStick from '../base/joystick';
@@ -190,7 +191,7 @@ export default forwardRef((props, ref) => {
           showModal('离开房间会游戏结束！你确定吗？');
         }}
       />
-      <Text text={`倒计时${count}秒`} x={config.GAME_WIDTH / 2} y={330} />
+      <Text text={`倒计时${3}秒`} x={config.GAME_WIDTH / 2} y={330} />
     </Container>
   );
 });

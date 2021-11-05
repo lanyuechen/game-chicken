@@ -159,11 +159,11 @@ export default forwardRef((props, ref) => {
 
   // 子弹发射点的位置
   const shootPoint = () => {
-    let half = parseInt(45 * config.dpr / 2);
-    return {
-      x: x + half * Math.cos(store.rotation),
-      y: y + half * Math.sin(store.rotation),
-    };
+    // let half = parseInt(45 * config.dpr / 2);
+    // return {
+    //   x: x + half * Math.cos(store.rotation),
+    //   y: y + half * Math.sin(store.rotation),
+    // };
   }
 
   const setSpeed = (speed, rotation) => {

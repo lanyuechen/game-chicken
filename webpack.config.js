@@ -2,6 +2,7 @@ const webpack = require('webpack');
 const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const ESLintPlugin = require('eslint-webpack-plugin');
 const WebpackBar = require('webpackbar');
 
 module.exports = {
@@ -23,6 +24,9 @@ module.exports = {
   },
   plugins: [
     new WebpackBar(),
+    new ESLintPlugin({
+      extensions: ['js', 'jsx']
+    }),
     new webpack.ProvidePlugin({
       PIXI: 'pixi.js',
     }),

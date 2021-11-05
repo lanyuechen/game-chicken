@@ -4,7 +4,7 @@ import { Sprite, Graphics } from '@inlet/react-pixi';
 const curr = 50;
 
 export default (props) => {
-  const { width, height, hp } = props;
+  const { width, height, x, y, hp } = props;
 
   const handleDraw = (g) => {
     g.clear();
@@ -20,10 +20,7 @@ export default (props) => {
   }
 
   return (
-    <Sprite
-      x={x}
-      y={y}
-    >
+    <Sprite x={x} y={y}>
       <Graphics draw={handleDraw} />
     </Sprite>
   )
