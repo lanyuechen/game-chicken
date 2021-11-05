@@ -9,7 +9,6 @@ export const show = (options) => {
     showCancel,
     success: (res) => {
       if (res.confirm) {
-        console.log('=====', res, res/confirm);
         onOk();
       }
     },

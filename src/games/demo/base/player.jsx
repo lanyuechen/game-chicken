@@ -61,6 +61,14 @@ export default forwardRef((props, ref) => {
         y !== undefined ? y : p.y,
       ]);
     },
+    setSpeed: (speed, rotation) => {
+      store.speed = speed;
+      rotation = rotation || store.rotation;
+  
+      const { x, y } = velocityDecomposition(store.speed, rotation);
+      store.speedX = x;
+      store.speedY = -y;
+    },
     shoot: () => {
       // const bullet = new Bullet();
       // databus.bullets.push(bullet);

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sprite, Graphics } from '@inlet/react-pixi';
+import { Container, Graphics } from '@inlet/react-pixi';
 
 const curr = 50;
 
@@ -20,8 +20,8 @@ export default (props) => {
   }
 
   return (
-    <Sprite x={x} y={y}>
+    <Container x={x} y={y}>
       <Graphics draw={handleDraw} />
-    </Sprite>
+    </Container>
   )
 }

@@ -11,7 +11,6 @@ import gameServer from '@/core/game-server';
 import databus from '@/core/databus';
 
 import Tween from '@/base/tween';
-// import Result      from '@/scenes/result';
 
 export default () => {
   const app = useApp();
@@ -41,7 +40,6 @@ export default () => {
 
     gameServer.event.on('onGameStart', () => {
       setScene('battle');
-      // databus.gameInstance = battle;
     });
 
     gameServer.event.on('onGameEnd', () => {
@@ -124,10 +122,9 @@ export default () => {
   return (
     <Container>
       <Background image="images/bg.png" />
-      {/* {scene === 'home' && <Home />}
+      {scene === 'home' && <Home />}
       {scene === 'room' && <Room />}
-      {scene === 'battle' && <Battle />} */}
-      <Battle />
+      {scene === 'battle' && <Battle ref={ele => databus.gameInstance = ele} />}
     </Container>
   )
 }

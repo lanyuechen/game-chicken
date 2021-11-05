@@ -46,7 +46,7 @@ export default forwardRef((props, ref) => {
       if (frameId === 1) {
         // this.addCountdown(3);
       }
-  
+
       // 倒计时后允许操作
       if (frameId === parseInt(3000 / gameServer.fps)) {
         console.log('joystick enable');
@@ -83,7 +83,7 @@ export default forwardRef((props, ref) => {
   const [active, setActive] = useState(false);
 
   const members = useMemo(() => {
-    return gameServer.roomInfo.memberList || [];
+    return (gameServer.roomInfo.memberList || []).filter(d => d.clientId !== undefined);
   }, []);
 
   useEffect(() => {
@@ -113,8 +113,10 @@ export default forwardRef((props, ref) => {
   }
 
   const handleSetPlayer = (clientId, player) => {
-    databus.playerMap[clientId] = player;
-    databus.playerList.push(player);
+    if (player) {
+      databus.playerMap[clientId] = player;
+      databus.playerList.push(player);
+    }
   }
 
   const handleJoyStick = (e) => {
@@ -156,7 +158,7 @@ export default forwardRef((props, ref) => {
         return (
           <Container key={member.clientId}>
             <Player
-              ref={(ele) => handleSetPlayer(member.clientId, ele)}
+              ref={(ele) => handleSetPlayer(member.clientId, ele, member)}
               userInfo={member}
     
               x={isLeft ? 90 / 2 : config.GAME_WIDTH - 90 / 2}
@@ -191,7 +193,7 @@ export default forwardRef((props, ref) => {
           showModal('离开房间会游戏结束！你确定吗？');
         }}
       />
-      <Text text={`倒计时${3}秒`} x={config.GAME_WIDTH / 2} y={330} />
+      {/* <Text text={`倒计时${3}秒`} x={config.GAME_WIDTH / 2} y={330} /> */}
     </Container>
   );
 });

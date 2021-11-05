@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { Container, Text } from '@inlet/react-pixi';
 
-import Debug from '@/components/debug';
 import Button from '@/components/ui/button';
 
 import config from '@/config';
@@ -15,7 +14,6 @@ export default () => {
 
   return (
     <Container>
-      <Debug />
       <Text
         text="小游戏帧同步功能示例"
         x={config.GAME_WIDTH / 2}
