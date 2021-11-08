@@ -3,6 +3,7 @@ import { AnimatedSprite } from '@inlet/react-pixi';
 
 import config from '@/config';
 import useStore from '@/utils/use-store';
+import { useRenderUpdate, useLogicUpdate, usePreditUpdate } from '@/utils/use-tick';
 
 import {
   velocityDecomposition,
@@ -39,6 +40,69 @@ export default forwardRef((props, ref) => {
     currDegree: 0,
     hp: config.playerHp,
   });
+
+  useRenderUpdate((dt) => {
+    const { x, y } = playerRef.current.position;
+    if (x !== store.preditX || y !== store.preditY) {
+      let dis = getDistance({ x, y }, { x: store.preditX, y: store.preditY });
+      let temp = (dt / (1000 / 30)) * (0.2 * (1000 / 30));
+      let percent = getNumInRange(temp / dis, 0, 1);
+
+      setPosition({
+        x: x + (store.preditX - x) * percent,
+        y: y + (store.preditY - y) * percent,
+      });
+    }
+
+    if (store.currDegree !== store.frameDegree) {
+      const dis = getMove(store.currDegree, store.frameDegree);
+
+      let temp = (dt / (1000 / 30)) * 10;
+      let percent = getNumInRange(temp / Math.abs(dis), 0, 1);
+
+      store.currDegree += dis * percent;
+
+      store.currDegree = limitNumInRange(store.currDegree, 0, 360);
+      setRotation(convertDegree2Radian(store.currDegree))
+    }
+  }, []);
+
+  useLogicUpdate((dt) => {
+    let newX = store.frameX + store.speedX * dt;
+    let newY = store.frameY + store.speedY * dt;
+
+    store.frameX = getNumInRange(newX, store.radius, config.GAME_WIDTH - store.radius);
+    store.frameY = getNumInRange(newY, store.radius, config.GAME_HEIGHT - store.radius);
+
+    // 当前方向与目标方向不一致，朝着目标方向推进
+    if (store.frameDegree !== store.desDegree) {
+      const dis = getMove(store.frameDegree, store.desDegree);
+
+      if (Math.abs(dis) <= 10) {
+        store.frameDegree = store.desDegree;
+      } else {
+        if (dis > 0) {
+          store.frameDegree += 10;
+        } else {
+          store.frameDegree -= 10;
+        }
+      }
+
+      store.frameDegree = limitNumInRange(store.frameDegree, 0, 360);
+
+      let radian = convertDegree2Radian(store.frameDegree);
+      store.frameRotation = radian;
+      setSpeed(0.2, radian);
+    }
+  }, []);
+
+  usePreditUpdate((dt) => {
+    let newX = store.frameX + store.speedX * dt;
+    let newY = store.frameY + store.speedY * dt;
+
+    store.preditX = getNumInRange(newX, store.radius, config.GAME_WIDTH - store.radius);
+    store.preditY = getNumInRange(newY, store.radius, config.GAME_HEIGHT - store.radius);
+  }, []);
 
   useImperativeHandle(ref, () => ({
     stop: () => {
@@ -79,71 +143,6 @@ export default forwardRef((props, ref) => {
     setDestDegree: (degree) => {
       store.desDegree = degree;
     },
-    /**
-     * 为了表现平滑，渲染帧都会以一个比逻辑帧的速度执行
-     * 逻辑帧也会计算该逻辑帧最终的表现数据
-     */
-    renderUpdate: (dt) => {
-      const { x, y } = playerRef.current.position;
-      if (x !== store.preditX || y !== store.preditY) {
-        let dis = getDistance({ x, y }, { x: store.preditX, y: store.preditY });
-        let temp = (dt / (1000 / 30)) * (0.2 * (1000 / 30));
-        let percent = getNumInRange(temp / dis, 0, 1);
-
-        setPosition({
-          x: x + (store.preditX - x) * percent,
-          y: y + (store.preditY - y) * percent,
-        });
-      }
-
-      if (store.currDegree !== store.frameDegree) {
-        const dis = getMove(store.currDegree, store.frameDegree);
-
-        let temp = (dt / (1000 / 30)) * 10;
-        let percent = getNumInRange(temp / Math.abs(dis), 0, 1);
-
-        store.currDegree += dis * percent;
-
-        store.currDegree = limitNumInRange(store.currDegree, 0, 360);
-        setRotation(convertDegree2Radian(store.currDegree))
-      }
-    },
-    // 每个逻辑帧执行
-    frameUpdate: (dt) => {
-      let newX = store.frameX + store.speedX * dt;
-      let newY = store.frameY + store.speedY * dt;
-
-      store.frameX = getNumInRange(newX, store.radius, config.GAME_WIDTH - store.radius);
-      store.frameY = getNumInRange(newY, store.radius, config.GAME_HEIGHT - store.radius);
-
-      // 当前方向与目标方向不一致，朝着目标方向推进
-      if (store.frameDegree !== store.desDegree) {
-        const dis = getMove(store.frameDegree, store.desDegree);
-
-        if (Math.abs(dis) <= 10) {
-          store.frameDegree = store.desDegree;
-        } else {
-          if (dis > 0) {
-            store.frameDegree += 10;
-          } else {
-            store.frameDegree -= 10;
-          }
-        }
-
-        store.frameDegree = limitNumInRange(store.frameDegree, 0, 360);
-
-        let radian = convertDegree2Radian(store.frameDegree);
-        store.frameRotation = radian;
-        setSpeed(0.2, radian);
-      }
-    },
-    preditUpdate(dt) {
-      let newX = store.frameX + store.speedX * dt;
-      let newY = store.frameY + store.speedY * dt;
-
-      store.preditX = getNumInRange(newX, store.radius, config.GAME_WIDTH - store.radius);
-      store.preditY = getNumInRange(newY, store.radius, config.GAME_HEIGHT - store.radius);
-    }
   }), []);
 
   const setSpeed = (speed, _rotation) => {

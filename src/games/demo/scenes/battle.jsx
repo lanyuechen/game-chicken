@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useImperativeHandle, forwardRef, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Container, Text } from '@inlet/react-pixi';
 import Debug from '@/components/debug';
 import * as modal from '@/components/ui/modal';
@@ -12,73 +12,46 @@ import config from '@/config';
 import gameServer from '@/core/game-server';
 import databus from '@/core/databus';
 import { checkCircleCollision, getTextWidth } from '@/utils/utils';
+import { useLogicUpdate } from '@/utils/use-tick';
 
-export default forwardRef((props, ref) => {
+export default (props) => {
 
-  useImperativeHandle(ref, () => ({
-    renderUpdate: (dt) => {
-      if (databus.gameover) {
-        return;
-      }
-  
-      databus.playerList.forEach((player) => {
-        player.renderUpdate(dt);
-      });
-      databus.bullets.forEach((bullet) => {
-        bullet.renderUpdate(dt);
-      });
-    },
-    preditUpdate: (dt) => {
-      databus.playerList.forEach((player) => {
-        player.preditUpdate(dt);
-      });
-  
-      databus.bullets.forEach((bullet) => {
-        bullet.preditUpdate(dt);
-      });
-    },
-    logicUpdate: (dt, frameId) => {
-      if (databus.gameover) {
-        return;
-      }
-  
-      // 收到第一帧开始倒计时
-      if (frameId === 1) {
-        // this.addCountdown(3);
-      }
-
-      // 倒计时后允许操作
-      if (frameId === parseInt(3000 / gameServer.fps)) {
-        console.log('joystick enable');
-        setActive(true);
-      }
-  
-      databus.playerList.forEach((player) => {
-        player.frameUpdate(dt);
-      });
-  
-      databus.bullets.forEach((bullet) => {
-        bullet.frameUpdate(dt);
-        // 碰撞检测的仲裁逻辑
-        databus.playerList.forEach((player) => {
-          if (
-            bullet.sourcePlayer !== player &&
-            checkCircleCollision(player.collisionCircle, bullet.collisionCircle)
-          ) {
-            databus.removeBullets(bullet);
-            player.hp--;
-  
-            player.hpRender.updateHp(player.hp);
-  
-            if (player.hp <= 0) {
-              gameServer.settle();
-              gameServer.endGame();
-            }
-          }
-        });
-      });
+  useLogicUpdate((dt, frameId) => {
+    if (databus.gameover) {
+      return;
     }
-  }));
+
+    // 收到第一帧开始倒计时
+    if (frameId === 1) {
+      // this.addCountdown(3);
+    }
+
+    // 倒计时后允许操作
+    if (frameId === parseInt(3000 / gameServer.fps)) {
+      console.log('joystick enable');
+      setActive(true);
+    }
+
+    databus.bullets.forEach((bullet) => {
+      // 碰撞检测的仲裁逻辑
+      databus.playerList.forEach((player) => {
+        if (
+          bullet.sourcePlayer !== player &&
+          checkCircleCollision(player.collisionCircle, bullet.collisionCircle)
+        ) {
+          databus.removeBullets(bullet);
+          player.hp--;
+
+          player.hpRender.updateHp(player.hp);
+
+          if (player.hp <= 0) {
+            gameServer.settle();
+            gameServer.endGame();
+          }
+        }
+      });
+    });
+  }, []);
 
   const [active, setActive] = useState(false);
 
@@ -203,4 +176,4 @@ export default forwardRef((props, ref) => {
       {/* <Text text={`倒计时${3}秒`} x={config.GAME_WIDTH / 2} y={330} /> */}
     </Container>
   );
-});
+};
