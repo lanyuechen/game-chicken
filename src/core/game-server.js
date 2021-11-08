@@ -219,7 +219,7 @@ class GameServer {
       this.uploadFrame([
         JSON.stringify({
           c: ++this.statCount,
-          t: +new Date(),
+          t: Date.now(),
           e: config.msg.STAT,
           id: databus.selfClientId,
         }),
@@ -236,7 +236,7 @@ class GameServer {
       this.reconnectSuccess && databus.debugMsg.push(`重连成功: ${this.reconnectSuccess}`);
       this.reconnectFail && databus.debugMsg.push(`重连失败: ${this.reconnectFail}`);
 
-      databus.gameInstance.debug.updateDebugMsg(databus.debugMsg);
+      // databus.gameInstance.debug.updateDebugMsg(databus.debugMsg);
     }, 1000);
   }
 
