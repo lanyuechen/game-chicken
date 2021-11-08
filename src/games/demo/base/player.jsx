@@ -1,4 +1,4 @@
-import React, { forwardRef, useImperativeHandle, useState } from 'react';
+import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import { AnimatedSprite } from '@inlet/react-pixi';
 
 import config from '@/config';
@@ -18,21 +18,22 @@ import databus from '@/core/databus';
 import music from '@/base/music';
 
 export default forwardRef((props, ref) => {
-  const { userInfo } = props;
+  const { userInfo, x, y } = props;
+  const playerRef = useRef();
 
-  const [position, setPosition] = useState([config.GAME_WIDTH / 2, config.GAME_HEIGHT / 2]);
+  const [position, setPosition] = useState({ x, y });
+  const [rotation, setRotation] = useState(0);
   const store = useStore({
     radius: parseInt(45 * config.dpr / 2),
     speed: 0,
     speedX: 0,
     speedY: 0,
-    rotation: 0,
     frameRotation: 0,
     userData: userInfo,
-    frameX: 0,
-    frameY: 0,
-    preditX: 0,
-    preditY: 0,
+    frameX: x,
+    frameY: y,
+    preditX: x,
+    preditY: y,
     desDegree: 0,
     frameDegree: 0,
     currDegree: 0,
@@ -40,34 +41,23 @@ export default forwardRef((props, ref) => {
   });
 
   useImperativeHandle(ref, () => ({
+    stop: () => {
+      setSpeed(0);
+      store.desDegree = store.frameDegree;
+    },
     setDirection: (degree) => {
       store.desDegree = degree;
       store.frameDegree = degree;
       store.currDegree = degree;
-
-      store.rotation = convertDegree2Radian(degree); // 
       
-      store.frameRotation = store.rotation;
+      store.frameRotation = convertDegree2Radian(degree);
+      setRotation(store.frameRotation);
     },
     collisionCircle: () => {
       return {
         center: { x: store.frameX, y: store.frameY },
         radius: store.radius,
       };
-    },
-    setPos: (x, y) => {
-      setPosition(p => [
-        x !== undefined ? x : p.x,
-        y !== undefined ? y : p.y,
-      ]);
-    },
-    setSpeed: (speed, rotation) => {
-      store.speed = speed;
-      rotation = rotation || store.rotation;
-  
-      const { x, y } = velocityDecomposition(store.speed, rotation);
-      store.speedX = x;
-      store.speedY = -y;
     },
     shoot: () => {
       // const bullet = new Bullet();
@@ -94,107 +84,97 @@ export default forwardRef((props, ref) => {
      * 逻辑帧也会计算该逻辑帧最终的表现数据
      */
     renderUpdate: (dt) => {
-      // if (this.x !== this.preditX || this.y !== this.preditY) {
-      //   let dis = getDistance({ x: this.x, y: this.y }, { x: this.preditX, y: this.preditY });
-      //   let temp = (dt / (1000 / 30)) * (0.2 * (1000 / 30));
-      //   let percent = getNumInRange(temp / dis, 0, 1);
+      const { x, y } = playerRef.current.position;
+      if (x !== store.preditX || y !== store.preditY) {
+        let dis = getDistance({ x, y }, { x: store.preditX, y: store.preditY });
+        let temp = (dt / (1000 / 30)) * (0.2 * (1000 / 30));
+        let percent = getNumInRange(temp / dis, 0, 1);
 
-      //   this.x += (this.preditX - this.x) * percent;
-      //   this.y += (this.preditY - this.y) * percent;
-      // }
+        setPosition({
+          x: x + (store.preditX - x) * percent,
+          y: y + (store.preditY - y) * percent,
+        });
+      }
 
-      // if (this.currDegree !== this.frameDegree) {
-      //   const dis = getMove(this.currDegree, this.frameDegree);
+      if (store.currDegree !== store.frameDegree) {
+        const dis = getMove(store.currDegree, store.frameDegree);
 
-      //   let temp = (dt / (1000 / 30)) * 10;
-      //   let percent = getNumInRange(temp / Math.abs(dis), 0, 1);
+        let temp = (dt / (1000 / 30)) * 10;
+        let percent = getNumInRange(temp / Math.abs(dis), 0, 1);
 
-      //   this.currDegree += dis * percent;
+        store.currDegree += dis * percent;
 
-      //   this.currDegree = limitNumInRange(this.currDegree, 0, 360);
-      //   this.rotation = convertDegree2Radian(this.currDegree);
-      // }
+        store.currDegree = limitNumInRange(store.currDegree, 0, 360);
+        setRotation(convertDegree2Radian(store.currDegree))
+      }
     },
     // 每个逻辑帧执行
     frameUpdate: (dt) => {
-      // let newX = this.frameX + this.speedX * dt;
-      // let newY = this.frameY + this.speedY * dt;
+      let newX = store.frameX + store.speedX * dt;
+      let newY = store.frameY + store.speedY * dt;
 
-      // // 碰到边缘
-      // if (newX - this.radius >= 0 && newX + this.radius <= config.GAME_WIDTH) {
-      //   this.frameX = newX;
-      // }
+      store.frameX = limitNumInRange(newX, store.radius, config.GAME_WIDTH - store.radius);
+      store.frameY = limitNumInRange(newY, store.radius, config.GAME_HEIGHT - store.radius);
+      
+      // 当前方向与目标方向不一致，朝着目标方向推进
+      if (store.frameDegree !== store.desDegree) {
+        const dis = getMove(store.frameDegree, store.desDegree);
 
-      // if (newY - this.radius >= 0 && newY + this.radius <= config.GAME_HEIGHT) {
-      //   this.frameY = newY;
-      // }
+        if (Math.abs(dis) <= 10) {
+          store.frameDegree = store.desDegree;
+        } else {
+          if (dis > 0) {
+            store.frameDegree += 10;
+          } else {
+            store.frameDegree -= 10;
+          }
+        }
 
-      // // 当前方向与目标方向不一致，朝着目标方向推进
-      // if (this.frameDegree !== this.desDegree) {
-      //   const dis = getMove(this.frameDegree, this.desDegree);
+        store.frameDegree = limitNumInRange(store.frameDegree, 0, 360);
 
-      //   if (Math.abs(dis) <= 10) {
-      //     this.frameDegree = this.desDegree;
-      //   } else {
-      //     if (dis > 0) {
-      //       this.frameDegree += 10;
-      //     } else {
-      //       this.frameDegree -= 10;
-      //     }
-      //   }
-
-      //   this.frameDegree = limitNumInRange(this.frameDegree, 0, 360);
-
-      //   let radian = convertDegree2Radian(this.frameDegree);
-      //   this.frameRotation = radian;
-      //   this.setSpeed(0.2, radian);
-      // }
+        let radian = convertDegree2Radian(store.frameDegree);
+        store.frameRotation = radian;
+        setSpeed(0.2, radian);
+      }
     },
     preditUpdate(dt) {
-      // let newX = this.frameX + this.speedX * dt;
-      // let newY = this.frameY + this.speedY * dt;
-  
-      // // 碰到边缘
-      // if (newX - this.radius >= 0 && newX + this.radius <= config.GAME_WIDTH) {
-      //   this.preditX = newX;
-      // }
-  
-      // if (newY - this.radius >= 0 && newY + this.radius <= config.GAME_HEIGHT) {
-      //   this.preditY = newY;
-      // }
+      let newX = store.frameX + store.speedX * dt;
+      let newY = store.frameY + store.speedY * dt;
+
+      store.preditX = limitNumInRange(newX, store.radius, config.GAME_WIDTH - store.radius);
+      store.preditY = limitNumInRange(newY, store.radius, config.GAME_HEIGHT - store.radius);
     }
-  }));
+  }), []);
 
-  // 子弹发射点的位置
-  const shootPoint = () => {
-    // let half = parseInt(45 * config.dpr / 2);
-    // return {
-    //   x: x + half * Math.cos(store.rotation),
-    //   y: y + half * Math.sin(store.rotation),
-    // };
-  }
-
-  const setSpeed = (speed, rotation) => {
+  const setSpeed = (speed, _rotation) => {
     store.speed = speed;
-    rotation = rotation || store.rotation;
+    _rotation = _rotation || rotation;
 
-    const { x, y } = velocityDecomposition(store.speed, rotation);
+    const { x, y } = velocityDecomposition(store.speed, _rotation);
     store.speedX = x;
     store.speedY = -y;
   }
 
+  // 子弹发射点的位置
+  const shootPoint = () => {
+    const half = parseInt(45 * config.dpr / 2);
+    return {
+      x: x + half * Math.cos(rotation),
+      y: y + half * Math.sin(rotation),
+    };
+  }
+
   return (
     <AnimatedSprite
+      ref={playerRef}
       images={['images/aircraft1.png', 'images/aircraft2.png']}
       anchor={0.5}
-      rotation={0}
+      rotation={rotation}
       width={45 * config.dpr}
       height={45 * config.dpr}
       position={position}
       animationSpeed={parseFloat((20 / 120).toFixed(2))}
       isPlaying
-    >
-
-    </AnimatedSprite>
+    />
   );
 });

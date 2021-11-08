@@ -85,10 +85,10 @@ export default (props) => {
 
     const limit = getPointInCircle(CENTER, RADIUS - BUTTON_RADIUS, x, y);
 
-    setBtnPos([
-      limit.resultX,
-      limit.resultY,
-    ]);
+    setBtnPos({
+      x: limit.resultX,
+      y: limit.resultY,
+    });
   }, []);
 
   const handleTouchMove = useCallback((evt) => {
@@ -107,15 +107,15 @@ export default (props) => {
 
     const limit = getPointInCircle(CENTER, RADIUS - BUTTON_RADIUS, x, y);
 
-    setBtnPos([
-      limit.resultX,
-      limit.resultY,
-    ]);
+    setBtnPos({
+      x: limit.resultX,
+      y: limit.resultY,
+    });
 
     if (!disabled) {
       eventFilter(limit);
     }
-  }, []);
+  }, [disabled]);
 
   const handleTouchEnd = useCallback(() => {
     store.touchId = -1;
@@ -132,9 +132,9 @@ export default (props) => {
     if (!disabled) {
       eventDispatch && eventDispatch(-9999);
     }
-  }, []);
+  }, [disabled]);
 
-  const eventFilter = (limit) => {
+  const eventFilter = useCallback((limit) => {
     let degree = limit.degree;
     let low = store.currentDegree - store.halfDirection;
     let high = store.currentDegree + store.halfDirection;
@@ -146,7 +146,7 @@ export default (props) => {
       limit.radian = convertDegree2Radian(store.currentDegree);
       eventDispatch && eventDispatch(limit);
     }
-  }
+  }, [eventDispatch]);
 
   return (
     <Container>

@@ -496,8 +496,7 @@ class GameServer {
           break;
 
         case config.msg.MOVE_STOP:
-          databus.playerMap[obj.n].setSpeed(0);
-          databus.playerMap[obj.n].desDegree = databus.playerMap[obj.n].frameDegree;
+          databus.playerMap[obj.n].stop();
           break;
       }
     });

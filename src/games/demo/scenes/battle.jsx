@@ -11,7 +11,7 @@ import Skill from '../base/skill';
 import config from '@/config';
 import gameServer from '@/core/game-server';
 import databus from '@/core/databus';
-import { checkCircleCollision } from '@/utils/utils';
+import { checkCircleCollision, getTextWidth } from '@/utils/utils';
 
 export default forwardRef((props, ref) => {
 
@@ -154,36 +154,44 @@ export default forwardRef((props, ref) => {
     <Container>
       <Debug />
       {members.map((member, i) => {
-        const isLeft = member.role === config.roleMap.owner || (databus.matchPattern && i)
+        const isLeft = member.role === config.roleMap.owner || (databus.matchPattern && i);
+        const width = getTextWidth('生命值：', { fontSize: 24 });
         return (
-          <Container key={member.clientId}>
-            <Player
-              ref={(ele) => handleSetPlayer(member.clientId, ele, member)}
-              userInfo={member}
-    
-              x={isLeft ? 90 / 2 : config.GAME_WIDTH - 90 / 2}
-              frameX={isLeft ? 90 / 2 : config.GAME_WIDTH - 90 / 2}
-              direction={isLeft ? 0 : 180}
-              y={config.GAME_HEIGHT / 2}
-              frameY={config.GAME_HEIGHT / 2}
-            />
-            <Hp width={231} height={22} x={0} y={56} hp={config.playerHp} />
+          <Container key={member.clientId} x={isLeft ? 0 : config.GAME_WIDTH - 231 - 253 - 330}>
+            <Hp width={231} height={22} x={330} y={56} hp={config.playerHp} />
             <Text
               text={member.nickname}
               style={{ fontSize: 28, fill: '#1D1D1D' }}
-              x={0}
+              x={330}
               y={96}
             />
             <Text
               text="生命值："
               style={{ fontSize: 24, fill: '#383838' }}
-              x={100}
-              y={96}
+              anchor={0.5}
+              x={330 - width / 2}
+              y={56 + 22 / 2}
             />
           </Container>
         );
       })}
-      <JoyStick eventDispatch={handleJoyStick} disabled={!active} />
+      {members.map((member, i) => {
+        const isLeft = member.role === config.roleMap.owner || (databus.matchPattern && i);
+        return (
+          <Player
+            key={member.clientId}
+            ref={(ele) => handleSetPlayer(member.clientId, ele, member)}
+            userInfo={member}
+  
+            x={isLeft ? 90 / 2 : config.GAME_WIDTH - 90 / 2}
+            y={config.GAME_HEIGHT / 2}
+            frameX={isLeft ? 90 / 2 : config.GAME_WIDTH - 90 / 2}
+            direction={isLeft ? 0 : 180}
+            frameY={config.GAME_HEIGHT / 2}
+          />
+        );
+      })}
+      <JoyStick eventDispatch={handleJoyStick} disabled={false} />
       <Skill eventDispatch={handleSkill} disabled={!active} />
       <Button
         image="images/goBack.png"

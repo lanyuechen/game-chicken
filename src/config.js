@@ -47,5 +47,5 @@ export default {
     partner: 0,
   },
 
-  playerHp: 20,
+  playerHp: 100,
 };
