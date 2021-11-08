@@ -113,9 +113,9 @@ export default forwardRef((props, ref) => {
       let newX = store.frameX + store.speedX * dt;
       let newY = store.frameY + store.speedY * dt;
 
-      store.frameX = limitNumInRange(newX, store.radius, config.GAME_WIDTH - store.radius);
-      store.frameY = limitNumInRange(newY, store.radius, config.GAME_HEIGHT - store.radius);
-      
+      store.frameX = getNumInRange(newX, store.radius, config.GAME_WIDTH - store.radius);
+      store.frameY = getNumInRange(newY, store.radius, config.GAME_HEIGHT - store.radius);
+
       // 当前方向与目标方向不一致，朝着目标方向推进
       if (store.frameDegree !== store.desDegree) {
         const dis = getMove(store.frameDegree, store.desDegree);
@@ -141,8 +141,8 @@ export default forwardRef((props, ref) => {
       let newX = store.frameX + store.speedX * dt;
       let newY = store.frameY + store.speedY * dt;
 
-      store.preditX = limitNumInRange(newX, store.radius, config.GAME_WIDTH - store.radius);
-      store.preditY = limitNumInRange(newY, store.radius, config.GAME_HEIGHT - store.radius);
+      store.preditX = getNumInRange(newX, store.radius, config.GAME_WIDTH - store.radius);
+      store.preditY = getNumInRange(newY, store.radius, config.GAME_HEIGHT - store.radius);
     }
   }), []);
 

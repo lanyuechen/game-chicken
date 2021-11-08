@@ -185,7 +185,6 @@ export default forwardRef((props, ref) => {
   
             x={isLeft ? 90 / 2 : config.GAME_WIDTH - 90 / 2}
             y={config.GAME_HEIGHT / 2}
-            frameX={isLeft ? 90 / 2 : config.GAME_WIDTH - 90 / 2}
             direction={isLeft ? 0 : 180}
             frameY={config.GAME_HEIGHT / 2}
           />
