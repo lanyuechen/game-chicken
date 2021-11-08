@@ -452,7 +452,6 @@ class GameServer {
 
     // 重连中不执行渲染
     if (!this.reconnecting) {
-      // databus.gameInstance.renderUpdate(dt);
       if (databus.renderUpdateList && databus.renderUpdateList.length) {
         databus.renderUpdateList.forEach(renderUpdate => renderUpdate(dt));
       }
@@ -484,7 +483,6 @@ class GameServer {
     const frame = this.frames.shift();
 
     // 每次执行逻辑帧，将指令同步后，演算游戏状态
-    // databus.gameInstance.logicUpdate(this.frameInterval, frame.frameId);
     if (databus.logicUpdateList && databus.logicUpdateList.length) {
       databus.logicUpdateList.forEach(logicUpdate => logicUpdate(this.frameInterval, frame.frameId));
     }
@@ -507,7 +505,6 @@ class GameServer {
       }
     });
 
-    // databus.gameInstance.preditUpdate(this.frameInterval);
     if (databus.preditUpdateList && databus.preditUpdateList.length) {
       databus.preditUpdateList.forEach(preditUpdate => preditUpdate(this.frameInterval));
     }

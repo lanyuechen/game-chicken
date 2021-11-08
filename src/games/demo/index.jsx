@@ -124,7 +124,7 @@ export default () => {
       <Background image="images/bg.png" />
       {scene === 'home' && <Home />}
       {scene === 'room' && <Room />}
-      {scene === 'battle' && <Battle ref={ele => databus.gameInstance = ele} />}
+      {scene === 'battle' && <Battle />}
     </Container>
   )
 }
