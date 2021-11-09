@@ -4,6 +4,7 @@ import { AnimatedSprite } from '@inlet/react-pixi';
 import config from '@/config';
 import useStore from '@/utils/use-store';
 import { useRenderUpdate, useLogicUpdate, usePreditUpdate } from '@/utils/use-tick';
+import databus from '@/core/databus';
 
 import {
   velocityDecomposition,
@@ -13,17 +14,19 @@ import {
   limitNumInRange,
   getMove,
 } from '@/utils/utils';
+import MovableObject from '@/utils/movable-object';
+import { useGlobalState } from '@/utils/state';
 
-import Bullet from '@/base/bullet';
-import databus from '@/core/databus';
 import music from '@/base/music';
 
 export default forwardRef((props, ref) => {
-  const { userInfo, x, y } = props;
+  const { userInfo, x, y, rotation: _rotation } = props;
   const playerRef = useRef();
+  const [, updateState] = useGlobalState();
 
   const [position, setPosition] = useState({ x, y });
-  const [rotation, setRotation] = useState(0);
+  const [rotation, setRotation] = useState(_rotation);
+  
   const store = useStore({
     radius: parseInt(45 * config.dpr / 2),
     speed: 0,
@@ -35,9 +38,9 @@ export default forwardRef((props, ref) => {
     frameY: y,
     preditX: x,
     preditY: y,
-    desDegree: 0,
-    frameDegree: 0,
-    currDegree: 0,
+    desDegree: _rotation * 180 / Math.PI,
+    frameDegree: _rotation * 180 / Math.PI,
+    currDegree: _rotation * 180 / Math.PI,
     hp: config.playerHp,
   });
 
@@ -124,15 +127,24 @@ export default forwardRef((props, ref) => {
       };
     },
     shoot: () => {
-      // const bullet = new Bullet();
-      // databus.bullets.push(bullet);
-  
-      // bullet.reset({
-      //   //direction: this.rotation,
-      //   direction: this.frameRotation,
-      //   speed: 0.7,
-      //   ...this.shootPoint(),
-      // });
+      const half = parseInt(45 * config.dpr / 2);
+      const { x, y } = playerRef.current.position;
+      const rotation = playerRef.current.rotation;
+
+      const bullet = new MovableObject({
+        x: x + half * Math.cos(rotation),
+        y: y + half * Math.sin(rotation),
+        width: 10 * config.dpr,
+        height: 5 * config.dpr,
+        rotation: store.frameRotation,
+        speed: 0.7,
+      });
+
+      updateState('bullets', {
+        $push: [
+          bullet
+        ]
+      });
   
       // bullet.sourcePlayer = this;
   
@@ -152,15 +164,6 @@ export default forwardRef((props, ref) => {
     const { x, y } = velocityDecomposition(store.speed, _rotation);
     store.speedX = x;
     store.speedY = -y;
-  }
-
-  // 子弹发射点的位置
-  const shootPoint = () => {
-    const half = parseInt(45 * config.dpr / 2);
-    return {
-      x: x + half * Math.cos(rotation),
-      y: y + half * Math.sin(rotation),
-    };
   }
 
   return (

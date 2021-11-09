@@ -9,6 +9,7 @@ import databus from '@/core/databus';
 import { showTip } from '@/utils/utils';
 
 const emptyUser = {
+  clientId: 'xxx',
   nickname: '点击邀请好友',
   headimg: 'images/avatar_default.png',
   isEmpty: true,

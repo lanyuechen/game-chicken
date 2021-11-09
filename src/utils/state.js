@@ -1,31 +1,32 @@
-import { useState, useContext, createContext } from 'react';
+import { useState, useContext, createContext, useCallback } from 'react';
 import update from 'immutability-helper';
 
-const defaultValue = {
+let nextState = {
   players: [],
   bullets: [],
 };
 
-const StateContext = createContext(defaultValue);
+const StateContext = createContext([
+  nextState,
+  () => {},
+]);
 
 export const useGlobalStateEntry = () => {
-  const [state, setState] = useState([
-    defaultValue,
-    (path, spec) => {
-      if (typeof path === 'string') {
-        path = path.split('.');
-      }
-      path = [0, ...path];
-      spec = path.reduceRight((p, k) => ({ [k]: p }), spec);
-      setState(s => update(s, spec));
+  const [, setState] = useState(nextState);
+  const updateState = useCallback((path, spec) => {
+    if (typeof path === 'string') {
+      path = path.split('.');
     }
-  ]);
-  return state;
+    spec = path.reduceRight((p, k) => ({ [k]: p }), spec);
+    nextState = update(nextState, spec);
+    setState(nextState);
+  }, []);
+  return [nextState, updateState];
 };
 
 export const useGlobalState = () => {
-  const [state, updateState] = useContext(StateContext);
-  return [state, updateState];
+  const [, updateState] = useContext(StateContext);
+  return [nextState, updateState];
 }
 
 export default StateContext

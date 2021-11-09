@@ -28,7 +28,7 @@ class DataBus {
   removeBullets(bullet) {
     this.bullets.splice(this.bullets.indexOf(bullet), 1);
 
-    bullet.parent.removeChild(bullet);
+    // bullet.parent.removeChild(bullet);
   }
 }
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { memo, useEffect, useMemo, useState } from 'react';
 import { Container, Text } from '@inlet/react-pixi';
 import Debug from '@/components/debug';
 import * as modal from '@/components/ui/modal';
@@ -8,15 +8,16 @@ import Player from '../base/player';
 import Hp from '../base/hp';
 import JoyStick from '../base/joystick';
 import Skill from '../base/skill';
+import Bullets from '../base/bullets';
 
 import config from '@/config';
 import gameServer from '@/core/game-server';
 import databus from '@/core/databus';
-import { checkCircleCollision, getTextWidth } from '@/utils/utils';
+import { getTextWidth } from '@/utils/utils';
 import { useLogicUpdate } from '@/utils/use-tick';
 
-export default (props) => {
-  const [active, setActive] = useState(false);
+export default memo(() => {
+  const [active, setActive] = useState(true);
 
   useLogicUpdate((dt, frameId) => {
     // 收到第一帧开始倒计时
@@ -29,26 +30,6 @@ export default (props) => {
       console.log('joystick enable');
       setActive(true);
     }
-
-    databus.bullets.forEach((bullet) => {
-      // 碰撞检测的仲裁逻辑
-      databus.playerList.forEach((player) => {
-        if (
-          bullet.sourcePlayer !== player &&
-          checkCircleCollision(player.collisionCircle, bullet.collisionCircle)
-        ) {
-          databus.removeBullets(bullet);
-          player.hp--;
-
-          player.hpRender.updateHp(player.hp);
-
-          if (player.hp <= 0) {
-            gameServer.settle();
-            gameServer.endGame();
-          }
-        }
-      });
-    });
   }, []);
 
   const members = useMemo(() => {
@@ -134,14 +115,13 @@ export default (props) => {
             key={member.clientId}
             ref={(ele) => handleSetPlayer(member.clientId, ele, member)}
             userInfo={member}
-  
             x={isLeft ? 90 / 2 : config.GAME_WIDTH - 90 / 2}
             y={config.GAME_HEIGHT / 2}
-            direction={isLeft ? 0 : 180}
-            frameY={config.GAME_HEIGHT / 2}
+            rotation={isLeft ? 0 : Math.PI}
           />
         );
       })}
+      <Bullets />
       <JoyStick eventDispatch={handleJoyStick} disabled={!active} />
       <Skill eventDispatch={handleSkill} disabled={!active} />
       <Button
@@ -152,7 +132,7 @@ export default (props) => {
           showModal('离开房间会游戏结束！你确定吗？');
         }}
       />
-      <CountDown count={3} x={config.GAME_WIDTH / 2} y={330} />
+      {/* <CountDown count={3} x={config.GAME_WIDTH / 2} y={330} /> */}
     </Container>
   );
-};
+});
