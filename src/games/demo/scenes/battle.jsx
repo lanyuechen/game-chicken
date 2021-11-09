@@ -3,6 +3,7 @@ import { Container, Text } from '@inlet/react-pixi';
 import Debug from '@/components/debug';
 import * as modal from '@/components/ui/modal';
 import Button from '@/components/ui/button';
+import CountDown from '@/components/count-down';
 import Player from '../base/player';
 import Hp from '../base/hp';
 import JoyStick from '../base/joystick';
@@ -15,12 +16,9 @@ import { checkCircleCollision, getTextWidth } from '@/utils/utils';
 import { useLogicUpdate } from '@/utils/use-tick';
 
 export default (props) => {
+  const [active, setActive] = useState(false);
 
   useLogicUpdate((dt, frameId) => {
-    if (databus.gameover) {
-      return;
-    }
-
     // 收到第一帧开始倒计时
     if (frameId === 1) {
       // this.addCountdown(3);
@@ -53,37 +51,18 @@ export default (props) => {
     });
   }, []);
 
-  const [active, setActive] = useState(false);
-
   const members = useMemo(() => {
     return (gameServer.roomInfo.memberList || []).filter(d => d.clientId !== undefined);
   }, []);
 
   useEffect(() => {
     gameServer.event.on('onRoomInfoChange', (res) => {
-      res.memberList.length < 2 && showModal('对方已离开房间，无法继续进行PK！', true);
+      res.memberList.length < 2 && showModal('对方已离开房间，无法继续进行PK！', false);
     });
     return () => {
       gameServer.event.off('onRoomInfoChange');
     }
   }, []);
-
-  const addCountdown = (count) => {
-    if (this.countdownText) {
-      this.removeChild(this.countdownText);
-    }
-
-    this.renderCount(count--);
-    if (count >= 0) {
-      setTimeout(() => {
-        this.addCountdown(count);
-      }, 1000);
-    } else {
-      setTimeout(() => {
-        this.removeChild(this.countdownText);
-      }, 1000);
-    }
-  }
 
   const handleSetPlayer = (clientId, player) => {
     if (player) {
@@ -109,10 +88,10 @@ export default (props) => {
     ]);
   }
 
-  const showModal = (content, isCancel) => {
+  const showModal = (content, showCancel = true) => {
     modal.show({
       content, 
-      showCancel: !isCancel,
+      showCancel,
       onOk: () => {
         if (databus.selfMemberInfo.role === config.roleMap.owner) {
           gameServer.ownerLeaveRoom();
@@ -163,7 +142,7 @@ export default (props) => {
           />
         );
       })}
-      <JoyStick eventDispatch={handleJoyStick} disabled={false} />
+      <JoyStick eventDispatch={handleJoyStick} disabled={!active} />
       <Skill eventDispatch={handleSkill} disabled={!active} />
       <Button
         image="images/goBack.png"
@@ -173,7 +152,7 @@ export default (props) => {
           showModal('离开房间会游戏结束！你确定吗？');
         }}
       />
-      {/* <Text text={`倒计时${3}秒`} x={config.GAME_WIDTH / 2} y={330} /> */}
+      <CountDown count={3} x={config.GAME_WIDTH / 2} y={330} />
     </Container>
   );
 };

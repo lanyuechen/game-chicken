@@ -446,7 +446,7 @@ class GameServer {
   }
 
   update(dt) {
-    if (!this.frameStart) {
+    if (!this.frameStart || databus.gameover) {
       return;
     }
 
