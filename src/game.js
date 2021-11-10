@@ -5,7 +5,7 @@ import React from 'react';
 import { render, AppProvider } from '@inlet/react-pixi';
 import GameEngine from '@/core/game-engine';
 
-import StateContext, { useDatabus } from '@/utils/state';
+import DatabusContext, { useDatabus } from '@/utils/databus';
 
 import Demo from '@/games/demo';
 
@@ -16,9 +16,9 @@ const Game = () => {
 
   return (
     <AppProvider value={gameEngine}>
-      <StateContext.Provider value={state}>
+      <DatabusContext.Provider value={state}>
         <Demo />
-      </StateContext.Provider>
+      </DatabusContext.Provider>
     </AppProvider>
   );
 }

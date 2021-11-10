@@ -14,14 +14,14 @@ import {
   getMove,
 } from '@/utils/utils';
 import MovableObject from '@/utils/movable-object';
-import { useDatabusUpdate } from '@/utils/state';
+import { useUpdate } from '@/utils/databus';
 
 import music from '@/base/music';
 
 export default forwardRef((props, ref) => {
   const { userInfo, x, y, rotation: _rotation } = props;
   const playerRef = useRef();
-  const updateState = useDatabusUpdate();
+  const update = useUpdate();
 
   const [position, setPosition] = useState({ x, y });
   const [rotation, setRotation] = useState(_rotation);
@@ -32,7 +32,6 @@ export default forwardRef((props, ref) => {
     speedX: 0,
     speedY: 0,
     frameRotation: 0,
-    userData: userInfo,
     frameX: x,
     frameY: y,
     preditX: x,
@@ -139,7 +138,9 @@ export default forwardRef((props, ref) => {
         speed: 0.7,
       });
 
-      updateState('bullets', {
+      bullet.clientId = userInfo.clientId;
+
+      update('bullets', {
         $push: [
           bullet
         ]
