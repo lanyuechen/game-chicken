@@ -1,35 +1,32 @@
 import { useState, useContext, createContext, useCallback } from 'react';
 import update from 'immutability-helper';
 
-const G = {};
-
-G.nextState = {
+window.DATABUS = {
   players: [],
   bullets: [],
 };
 
 const StateContext = createContext([
-  G.nextState,
+  window.DATABUS,
   () => {},
 ]);
 
-export const useGlobalStateEntry = () => {
-  const [, setState] = useState(G.nextState);
+export const useDatabus = () => {
+  const [state, setState] = useState(window.DATABUS);
   const updateState = useCallback((path, spec) => {
     if (typeof path === 'string') {
       path = path.split('.');
     }
-    // const key = path.shift();
     spec = path.reduceRight((p, k) => ({ [k]: p }), spec);
-    G.nextState = update(G.nextState, spec);
-    setState(G.nextState);
+    window.DATABUS = update(window.DATABUS, spec);
+    setState(window.DATABUS);
   }, []);
-  return [G.nextState, updateState];
+  return [state, updateState];
 };
 
-export const useGlobalState = () => {
+export const useDatabusUpdate = () => {
   const [, updateState] = useContext(StateContext);
-  return [G.nextState, updateState];
+  return updateState;
 }
 
 export default StateContext;

@@ -5,14 +5,14 @@ import React from 'react';
 import { render, AppProvider } from '@inlet/react-pixi';
 import GameEngine from '@/core/game-engine';
 
-import StateContext, { useGlobalStateEntry } from '@/utils/state';
+import StateContext, { useDatabus } from '@/utils/state';
 
 import Demo from '@/games/demo';
 
 const gameEngine = new GameEngine();
 
 const Game = () => {
-  const state = useGlobalStateEntry();
+  const state = useDatabus();
 
   return (
     <AppProvider value={gameEngine}>

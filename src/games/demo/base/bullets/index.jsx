@@ -2,33 +2,33 @@ import React from 'react';
 
 import databus from '@/core/databus';
 import { useRenderUpdate, useLogicUpdate, usePreditUpdate } from '@/utils/use-tick';
-import { useGlobalState } from '@/utils/state';
+import { useDatabusUpdate } from '@/utils/state';
 
 import Bullet from './bullet';
 
 export default () => {
-  const [state, updateState] = useGlobalState();
+  const updateState = useDatabusUpdate();
 
   useRenderUpdate((dt) => {
-    state.bullets.forEach((bullet, i) => {
-      bullet.renderUpdate(dt);
-      updateState(['bullets', i], {
-        $set: bullet,
-      });
-    })
-  }, [state]);
+    updateState('bullets', {
+      $set: DATABUS.bullets.map(bullet => {
+        bullet.renderUpdate(dt);
+        return bullet;
+      })
+    });
+  }, []);
 
   usePreditUpdate((dt) => {
-    state.bullets.forEach((bullet, i) => {
+    DATABUS.bullets.forEach((bullet, i) => {
       bullet.preditUpdate(dt);
       updateState(['bullets', i], {
         $set: bullet,
       });
     });
-  }, [state]);
+  }, []);
 
   useLogicUpdate((dt) => {
-    state.bullets.forEach((bullet, i) => {
+    DATABUS.bullets.forEach((bullet, i) => {
       bullet.frameUpdate(dt);
       if (bullet.checkNotInScreen()) {
         updateState('bullets', {
@@ -55,9 +55,9 @@ export default () => {
         // }
       });
     });
-  }, [state]);
+  }, []);
 
-  return state.bullets.map(bullet => (
+  return DATABUS.bullets.map(bullet => (
     <Bullet
       key={bullet.id}
       width={bullet.width}

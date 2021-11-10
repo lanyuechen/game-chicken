@@ -6,6 +6,7 @@ globals:
   wx: true
   canvas: true
   PIXI: true
+  DATABUS: true
 extends:
 - eslint:recommended
 - plugin:react/recommended

@@ -4,7 +4,6 @@ import { AnimatedSprite } from '@inlet/react-pixi';
 import config from '@/config';
 import useStore from '@/utils/use-store';
 import { useRenderUpdate, useLogicUpdate, usePreditUpdate } from '@/utils/use-tick';
-import databus from '@/core/databus';
 
 import {
   velocityDecomposition,
@@ -15,14 +14,14 @@ import {
   getMove,
 } from '@/utils/utils';
 import MovableObject from '@/utils/movable-object';
-import { useGlobalState } from '@/utils/state';
+import { useDatabusUpdate } from '@/utils/state';
 
 import music from '@/base/music';
 
 export default forwardRef((props, ref) => {
   const { userInfo, x, y, rotation: _rotation } = props;
   const playerRef = useRef();
-  const [, updateState] = useGlobalState();
+  const updateState = useDatabusUpdate();
 
   const [position, setPosition] = useState({ x, y });
   const [rotation, setRotation] = useState(_rotation);
@@ -145,10 +144,6 @@ export default forwardRef((props, ref) => {
           bullet
         ]
       });
-  
-      // bullet.sourcePlayer = this;
-  
-      // this.parent.addChild(bullet);
   
       // music.playShoot();
     },
