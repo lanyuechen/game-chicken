@@ -1,25 +1,29 @@
 import React from 'react';
-import Bullet from '../base/bullet';
 
 import databus from '@/core/databus';
 import { useRenderUpdate, useLogicUpdate, usePreditUpdate } from '@/utils/use-tick';
 import { useGlobalState } from '@/utils/state';
 
+import Bullet from './bullet';
+
 export default () => {
   const [state, updateState] = useGlobalState();
 
   useRenderUpdate((dt) => {
-    updateState('bullets', {
-      $set: state.bullets.map(bullet => {
-        bullet.renderUpdate(dt);
-        return bullet;
-      })
-    });
+    state.bullets.forEach((bullet, i) => {
+      bullet.renderUpdate(dt);
+      updateState(['bullets', i], {
+        $set: bullet,
+      });
+    })
   }, [state]);
 
   usePreditUpdate((dt) => {
-    state.bullets.forEach(bullet => {
+    state.bullets.forEach((bullet, i) => {
       bullet.preditUpdate(dt);
+      updateState(['bullets', i], {
+        $set: bullet,
+      });
     });
   }, [state]);
 

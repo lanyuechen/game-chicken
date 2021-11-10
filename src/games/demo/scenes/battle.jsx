@@ -1,20 +1,21 @@
 import React, { memo, useEffect, useMemo, useState } from 'react';
 import { Container, Text } from '@inlet/react-pixi';
 import Debug from '@/components/debug';
-import * as modal from '@/components/ui/modal';
 import Button from '@/components/ui/button';
 import CountDown from '@/components/count-down';
-import Player from '../base/player';
-import Hp from '../base/hp';
-import JoyStick from '../base/joystick';
-import Skill from '../base/skill';
-import Bullets from '../base/bullets';
+import * as modal from '@/components/ui/modal';
 
 import config from '@/config';
 import gameServer from '@/core/game-server';
 import databus from '@/core/databus';
 import { getTextWidth } from '@/utils/utils';
 import { useLogicUpdate } from '@/utils/use-tick';
+
+import Player from '../base/player';
+import Hp from '../base/hp';
+import JoyStick from '../base/joystick';
+import Skill from '../base/skill';
+import Bullets from '../base/bullets';
 
 export default memo(() => {
   const [active, setActive] = useState(true);
@@ -85,7 +86,7 @@ export default memo(() => {
 
   return (
     <Container>
-      <Debug />
+      <Bullets />
       {members.map((member, i) => {
         const isLeft = member.role === config.roleMap.owner || (databus.matchPattern && i);
         const width = getTextWidth('生命值：', { fontSize: 24 });
@@ -121,7 +122,6 @@ export default memo(() => {
           />
         );
       })}
-      <Bullets />
       <JoyStick eventDispatch={handleJoyStick} disabled={!active} />
       <Skill eventDispatch={handleSkill} disabled={!active} />
       <Button
@@ -133,6 +133,7 @@ export default memo(() => {
         }}
       />
       {/* <CountDown count={3} x={config.GAME_WIDTH / 2} y={330} /> */}
+      <Debug />
     </Container>
   );
 });

@@ -2,8 +2,8 @@ import config from '@/config.js';
 import { velocityDecomposition, getDistance, getNumInRange, uuid } from '@/utils/utils';
 
 export default class MovableObject {
-  constructor({ id, x, y, width, height, rotation, speed }) {
-    this.id = id || uuid();
+  constructor({ x, y, width, height, rotation, speed }) {
+    this.id = uuid();
 
     this.x = x || 0;
     this.y = y || 0;
@@ -29,10 +29,6 @@ export default class MovableObject {
       center: { x: this.frameX, y: this.frameY },
       radius: this.radius,
     };
-  }
-
-  clone() {
-    return new MovableObject(this);
   }
 
   setDirection(rotation) {
