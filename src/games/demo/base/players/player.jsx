@@ -1,13 +1,14 @@
-import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react';
+import React, { forwardRef, useImperativeHandle, useEffect, useRef, useState } from 'react';
 import { AnimatedSprite } from '@inlet/react-pixi';
 
 import config from '@/config';
 import useStore from '@/utils/use-store';
+import gameServer from '@/core/game-server';
 import { useRenderUpdate, useLogicUpdate, usePreditUpdate } from '@/utils/use-tick';
+import { databus } from '@/utils/databus';
 
 import {
   velocityDecomposition,
-  convertDegree2Radian,
   getDistance,
   getNumInRange,
   limitNumInRange,
@@ -19,12 +20,34 @@ import { useUpdate } from '@/utils/databus';
 import music from '@/base/music';
 
 export default forwardRef((props, ref) => {
-  const { userInfo, x, y, rotation: _rotation } = props;
+  const { x, y, rotation: _rotation, clientId } = props;
   const playerRef = useRef();
   const update = useUpdate();
 
   const [position, setPosition] = useState({ x, y });
   const [rotation, setRotation] = useState(_rotation);
+
+  useEffect(() => {
+    gameServer.event.on('onActionList', (obj) => {
+      if (clientId !== obj.n) {
+        return;
+      }
+      switch (obj.e) {
+        case config.msg.SHOOT:
+          shoot();
+          break;
+        case config.msg.MOVE_DIRECTION:
+          setDestDegree(obj.d);
+          break;
+        case config.msg.MOVE_STOP:
+          stop();
+          break;
+      }
+    });
+    return () => {
+      gameServer.event.off('onActionList');
+    }
+  }, []);
   
   const store = useStore({
     radius: parseInt(45 * config.dpr / 2),
@@ -36,17 +59,51 @@ export default forwardRef((props, ref) => {
     frameY: y,
     preditX: x,
     preditY: y,
-    desDegree: _rotation * 180 / Math.PI,
-    frameDegree: _rotation * 180 / Math.PI,
-    currDegree: _rotation * 180 / Math.PI,
+    desDegree: _rotation,
+    frameDegree: _rotation,
+    currDegree: _rotation,
     hp: config.playerHp,
   });
+
+  const stop = () => {
+    setSpeed(0);
+    store.desDegree = store.frameDegree;
+  }
+
+  const setDestDegree = (degree) => {
+    store.desDegree = degree * Math.PI / 180;
+  }
+
+  const shoot = () => {
+    const half = parseInt(45 * config.dpr / 2);
+    const { x, y } = playerRef.current.position;
+    const rotation = playerRef.current.rotation;
+
+    const bullet = new MovableObject({
+      x: x + half * Math.cos(rotation),
+      y: y + half * Math.sin(rotation),
+      width: 10 * config.dpr,
+      height: 5 * config.dpr,
+      rotation: store.frameRotation,
+      speed: 0.7,
+    });
+
+    bullet.clientId = clientId;
+
+    update('bullets', {
+      $push: [
+        bullet
+      ]
+    });
+
+    // music.playShoot();
+  }
 
   useRenderUpdate((dt) => {
     const { x, y } = playerRef.current.position;
     if (x !== store.preditX || y !== store.preditY) {
       let dis = getDistance({ x, y }, { x: store.preditX, y: store.preditY });
-      let temp = (dt / (1000 / 30)) * (0.2 * (1000 / 30));
+      let temp = (dt / (1000 / 30)) * (store.speed * (1000 / 30));
       let percent = getNumInRange(temp / dis, 0, 1);
 
       setPosition({
@@ -58,13 +115,13 @@ export default forwardRef((props, ref) => {
     if (store.currDegree !== store.frameDegree) {
       const dis = getMove(store.currDegree, store.frameDegree);
 
-      let temp = (dt / (1000 / 30)) * 10;
+      let temp = (dt / (1000 / 30)) * 10 * Math.PI / 180;
       let percent = getNumInRange(temp / Math.abs(dis), 0, 1);
 
       store.currDegree += dis * percent;
 
-      store.currDegree = limitNumInRange(store.currDegree, 0, 360);
-      setRotation(convertDegree2Radian(store.currDegree))
+      store.currDegree = limitNumInRange(store.currDegree, 0, 2 * Math.PI);
+      setRotation(store.currDegree)
     }
   }, []);
 
@@ -79,19 +136,19 @@ export default forwardRef((props, ref) => {
     if (store.frameDegree !== store.desDegree) {
       const dis = getMove(store.frameDegree, store.desDegree);
 
-      if (Math.abs(dis) <= 10) {
+      if (Math.abs(dis) <= 10 * Math.PI / 180) {
         store.frameDegree = store.desDegree;
       } else {
         if (dis > 0) {
-          store.frameDegree += 10;
+          store.frameDegree += 10 * Math.PI / 180;
         } else {
-          store.frameDegree -= 10;
+          store.frameDegree -= 10 * Math.PI / 180;
         }
       }
 
-      store.frameDegree = limitNumInRange(store.frameDegree, 0, 360);
+      store.frameDegree = limitNumInRange(store.frameDegree, 0, 2 * Math.PI);
 
-      let radian = convertDegree2Radian(store.frameDegree);
+      let radian = store.frameDegree;
       store.frameRotation = radian;
       setSpeed(0.2, radian);
     }
@@ -106,50 +163,11 @@ export default forwardRef((props, ref) => {
   }, []);
 
   useImperativeHandle(ref, () => ({
-    stop: () => {
-      setSpeed(0);
-      store.desDegree = store.frameDegree;
-    },
-    setDirection: (degree) => {
-      store.desDegree = degree;
-      store.frameDegree = degree;
-      store.currDegree = degree;
-      
-      store.frameRotation = convertDegree2Radian(degree);
-      setRotation(store.frameRotation);
-    },
     collisionCircle: () => {
       return {
         center: { x: store.frameX, y: store.frameY },
         radius: store.radius,
       };
-    },
-    shoot: () => {
-      const half = parseInt(45 * config.dpr / 2);
-      const { x, y } = playerRef.current.position;
-      const rotation = playerRef.current.rotation;
-
-      const bullet = new MovableObject({
-        x: x + half * Math.cos(rotation),
-        y: y + half * Math.sin(rotation),
-        width: 10 * config.dpr,
-        height: 5 * config.dpr,
-        rotation: store.frameRotation,
-        speed: 0.7,
-      });
-
-      bullet.clientId = userInfo.clientId;
-
-      update('bullets', {
-        $push: [
-          bullet
-        ]
-      });
-  
-      // music.playShoot();
-    },
-    setDestDegree: (degree) => {
-      store.desDegree = degree;
     },
   }), []);
 

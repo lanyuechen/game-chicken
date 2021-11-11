@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useState } from 'react';
 import { Container } from '@inlet/react-pixi';
 import Debug from '@/components/debug';
 import Button from '@/components/ui/button';
@@ -28,15 +28,6 @@ export default memo(() => {
     if (frameId === parseInt(3000 / gameServer.fps)) {
       console.log('joystick enable');
       setActive(true);
-    }
-  }, []);
-
-  useEffect(() => {
-    gameServer.event.on('onRoomInfoChange', (res) => {
-      res.memberList.length < 2 && showModal('对方已离开房间，无法继续进行PK！', false);
-    });
-    return () => {
-      gameServer.event.off('onRoomInfoChange');
     }
   }, []);
 

@@ -148,10 +148,10 @@ export function limitNumInRange(num, min, max) {
 
 export function getMove(from, to) {
   let dis = to - from;
-  if (dis < -180) {
-    dis += 360;
-  } else if (dis > 180) {
-    dis -= 360;
+  if (dis < -Math.PI) {
+    dis += 2 * Math.PI;
+  } else if (dis > Math.PI) {
+    dis -= 2 * Math.PI;
   }
 
   return dis;

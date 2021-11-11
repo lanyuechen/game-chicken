@@ -395,7 +395,7 @@ class GameServer {
   }
 
   getRoomInfo() {
-    return this.server.getRoomInfo();
+    return this.server.getRoomInfo().then(res => res.data.roomInfo);
   }
 
   startGame() {
@@ -490,19 +490,7 @@ class GameServer {
     (frame.actionList || []).forEach((oneFrame) => {
       let obj = JSON.parse(oneFrame);
 
-      switch (obj.e) {
-        case config.msg.SHOOT:
-          databus.playerMap[obj.n].shoot();
-          break;
-
-        case config.msg.MOVE_DIRECTION:
-          databus.playerMap[obj.n].setDestDegree(obj.d);
-          break;
-
-        case config.msg.MOVE_STOP:
-          databus.playerMap[obj.n].stop();
-          break;
-      }
+      this.event.emit('onActionList', obj);
     });
 
     if (databus.preditUpdateList && databus.preditUpdateList.length) {
