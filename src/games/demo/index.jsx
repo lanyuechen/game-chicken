@@ -8,7 +8,7 @@ import Battle from './scenes/battle';
 
 import config from '@/config';
 import gameServer from '@/core/game-server';
-import databus from '@/core/databus';
+import { databus } from '@/utils/databus';
 
 import Tween from '@/base/tween';
 

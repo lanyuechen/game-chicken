@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import databus from '@/core/databus';
+import { databus } from '@/utils/databus';
 
 export const useRenderUpdate = (cb) => {
   useEffect(() => {

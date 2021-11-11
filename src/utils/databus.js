@@ -1,9 +1,19 @@
 import { useState, useContext, createContext, useCallback } from 'react';
 import update from 'immutability-helper';
 
-let databus = {
+export let databus = {
   players: [],
   bullets: [],
+  selfClientId: 1,
+  selfPosNum: 0,
+  selfMemberInfo: {},
+  playerMap: {},
+  playerList: [],
+  currAccessInfo: '',
+  userInfo: {},
+  renderUpdateList: [],
+  logicUpdateList: [],
+  preditUpdateList: [],
 };
 
 const DatabusContext = createContext([
@@ -27,10 +37,6 @@ export const useDatabus = () => {
 export const useUpdate = () => {
   const [, updateState] = useContext(DatabusContext);
   return updateState;
-}
-
-export {
-  databus
 }
 
 export default DatabusContext;

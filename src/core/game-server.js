@@ -1,5 +1,5 @@
 import config from '@/config';
-import databus from '@/core/databus';
+import { databus } from '@/utils/databus';
 import { compareVersion, showTip } from '@/utils/utils';
 
 class GameServer {
@@ -254,7 +254,7 @@ class GameServer {
 
   clear() {
     this.reset();
-    databus.reset();
+    // databus.reset();
     this.event.emit('backHome');
   }
 

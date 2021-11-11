@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { useRenderUpdate, useLogicUpdate, usePreditUpdate } from '@/utils/use-tick';
-import { useUpdate, databus } from '@/utils/databus';
+import { databus, useUpdate } from '@/utils/databus';
 import { checkCircleCollision } from '@/utils/utils';
 import gameServer from '@/core/game-server';
 

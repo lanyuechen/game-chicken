@@ -1,7 +1,7 @@
 import config from '@/config';
 import login from '@/core/login';
 import gameServer from '@/core/game-server';
-import databus from '@/core/databus';
+import { databus } from '@/utils/databus';
 
 export default class extends PIXI.Application {
   constructor() {

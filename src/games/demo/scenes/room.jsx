@@ -4,7 +4,7 @@ import Button from '@/components/ui/button';
 
 import config from '@/config';
 import gameServer from '@/core/game-server';
-import databus from '@/core/databus';
+import { databus, useUpdate } from '@/utils/databus';
 
 import { showTip } from '@/utils/utils';
 
@@ -19,22 +19,31 @@ const emptyUser = {
 const PADDING = 136;
 
 export default () => {
-  const [members, setMembers] = useState([]);
+  const update = useUpdate();
 
   useEffect(() => {
     gameServer.event.on('onRoomInfoChange', (roomInfo) => {
-      setMembers(roomInfo.memberList || []);
+      update('players', {
+        $set: roomInfo.memberList || []
+      });
+      // setMembers(roomInfo.memberList || []);
     });
 
     if (!databus.matchPattern) {
       gameServer.getRoomInfo().then((res) => {
-        setMembers(res.data.roomInfo.memberList || []);
+        update('players', {
+          $set: res.data.roomInfo.memberList || []
+        });
+        // setMembers(res.data.roomInfo.memberList || []);
       });
     } 
   }, []);
 
+  const members = [...databus.players];
+
   const allReady = !members.find(member => !member.isReady);
   const myself = members.find(member => member.clientId === databus.selfClientId);
+
   if (myself) {
     databus.selfPosNum = myself.posNum;
     databus.selfMemberInfo = myself;

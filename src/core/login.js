@@ -1,5 +1,5 @@
 import { none } from '@/utils/utils';
-import databus from '@/core/databus';
+import { databus } from '@/utils/databus';
 
 class Login {
   constructor() {

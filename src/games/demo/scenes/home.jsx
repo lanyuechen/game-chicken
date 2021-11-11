@@ -4,8 +4,8 @@ import { Container, Text } from '@inlet/react-pixi';
 import Button from '@/components/ui/button';
 
 import config from '@/config';
-import databus from '@/core/databus';
 import gameServer from '@/core/game-server';
+import { databus } from '@/utils/databus';
 
 export default () => {
   useEffect(() => {
