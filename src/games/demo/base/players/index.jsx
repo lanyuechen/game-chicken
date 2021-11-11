@@ -40,7 +40,7 @@ export default () => {
       const isLeft = userInfo.role === config.roleMap.owner || (databus.matchPattern && i);
 
       return new MovableObject({
-        clientId: userInfo.clientId,
+        ...userInfo,
         x: isLeft ? 90 / 2 : config.GAME_WIDTH - 90 / 2,
         y: config.GAME_HEIGHT / 2,
         width: 45 * config.dpr,
