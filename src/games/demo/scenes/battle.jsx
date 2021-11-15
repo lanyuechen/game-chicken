@@ -3,6 +3,7 @@ import { Container } from '@inlet/react-pixi';
 import Debug from '@/components/debug';
 import Button from '@/components/ui/button';
 import CountDown from '@/components/count-down';
+import JoyStick from '@/components/joystick';
 import * as modal from '@/components/ui/modal';
 
 import config from '@/config';
@@ -11,7 +12,6 @@ import { useLogicUpdate } from '@/utils/use-tick';
 import { databus } from '@/utils/databus';
 import { MSG, ROLE } from '@/constant';
 
-import JoyStick from '../base/joystick';
 import Skill from '../base/skill';
 import Bullets from '../base/bullets';
 import Players from '../base/players';

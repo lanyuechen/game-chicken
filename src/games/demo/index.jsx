@@ -6,7 +6,6 @@ import Home from './scenes/home';
 import Room from './scenes/room';
 import Battle from './scenes/battle';
 
-import config from '@/config';
 import gameServer from '@/core/game-server';
 import { databus } from '@/utils/databus';
 import { ROLE } from '@/constant';

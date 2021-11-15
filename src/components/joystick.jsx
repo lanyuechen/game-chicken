@@ -51,6 +51,7 @@ export default (props) => {
   const { eventDispatch = none, disabled } = props;
   const store = useStore({
     touchId: -1,  // 用于限制区域内不能进行多点触控
+    touchStart: false,
     tweener: null,
     currIdentifier: void 0,
     directionCount: 360,
@@ -70,6 +71,8 @@ export default (props) => {
   }, []);
 
   const handleTouchStart = useCallback((evt) => {
+    store.touchStart = true;
+
     // 防止多点触控
     if (store.touchId !== -1) {
       return;
@@ -92,6 +95,9 @@ export default (props) => {
   }, []);
 
   const handleTouchMove = useCallback((evt) => {
+    if (!store.touchStart) {
+      return;
+    }
     /**
      * https://github.com/pixijs/pixi.js/issues/1979
      * PIXI的多点触控会依赖evt.data.identifier字段，所以每次开始接收move事件的时候
@@ -120,6 +126,7 @@ export default (props) => {
   const handleTouchEnd = useCallback(() => {
     store.touchId = -1;
     store.currIdentifier = undefined;
+    store.touchStart = false;
 
     // 小圆点缓慢回到中心
     store.tweener = Tween.to(
