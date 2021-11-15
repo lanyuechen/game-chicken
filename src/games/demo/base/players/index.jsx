@@ -102,18 +102,23 @@ export default () => {
         width: 45 * config.dpr,
         height: 45 * config.dpr,
         rotation: isLeft ? 0 : Math.PI,
-      })
+        hp: 100,
+      });
     });
 
     // 电脑玩家
-    // players.push(new MovableObject({
-    //   clientId: 'xxx',
-    //   x: config.GAME_WIDTH - 90 / 2,
-    //   y: config.GAME_HEIGHT / 2,
-    //   width: 45 * config.dpr,
-    //   height: 45 * config.dpr,
-    //   rotation: Math.PI,
-    // }))
+    players.push(new MovableObject({
+      clientId: 999,
+      nickname: '电脑玩家',
+      x: config.GAME_WIDTH - 90 / 2,
+      y: config.GAME_HEIGHT / 2,
+      width: 45 * config.dpr,
+      height: 45 * config.dpr,
+      rotation: Math.PI,
+      hp: 80,
+    }));
+
+    console.log('==========', players);
 
     update('players', {
       $set: players
@@ -149,14 +154,14 @@ export default () => {
 
   return (
     <Container>
-      {databus.players.map((member, i) => {
-        const isLeft = member.role === ROLE.OWNER || (databus.matchPattern && i);
+      {databus.players.map((player, i) => {
+        const isLeft = player.role === ROLE.OWNER || (databus.matchPattern && i);
         const width = getTextWidth('生命值：', { fontSize: 24 });
         return (
-          <Container key={member.clientId} x={isLeft ? 0 : config.GAME_WIDTH - 231 - 253 - 330}>
-            <Hp width={231} height={22} x={330} y={56} hp={config.playerHp} />
+          <Container key={player.clientId} x={isLeft ? 0 : config.GAME_WIDTH - 231 - 253 - 330}>
+            <Hp width={231} height={22} x={330} y={56} maxHp={config.playerHp} hp={player.hp} />
             <Text
-              text={member.nickname}
+              text={player.nickname}
               style={{ fontSize: 28, fill: '#1D1D1D' }}
               x={330}
               y={96}

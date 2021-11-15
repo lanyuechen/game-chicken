@@ -1,10 +1,8 @@
 import React from 'react';
 import { Container, Graphics } from '@inlet/react-pixi';
 
-const curr = 50;
-
 export default (props) => {
-  const { width, height, x, y, hp } = props;
+  const { width, height, x, y, maxHp, hp } = props;
 
   const handleDraw = (g) => {
     g.clear();
@@ -15,7 +13,7 @@ export default (props) => {
 
     g.lineStyle(2, 6710886, 1);
     g.beginFill(10002336, 1);
-    g.drawRoundedRect(1, 1, width * (curr / hp), height - 2, (height - 2) / 2);
+    g.drawRoundedRect(1, 1, width * (hp / maxHp), height - 2, (height - 2) / 2);
     g.endFill();
   }
 

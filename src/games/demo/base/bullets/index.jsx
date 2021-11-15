@@ -28,7 +28,7 @@ export default () => {
   });
 
   usePreditUpdate((dt) => {
-    databus.bullets.forEach((bullet, i) => {
+    databus.bullets.forEach(bullet => {
       bullet.preditUpdate(dt);
       // update(['bullets', i], {
       //   $set: bullet,
@@ -57,9 +57,7 @@ export default () => {
               [i, 1],
             ],
           });
-        //   player.hp--;
-
-        //   player.hpRender.updateHp(player.hp);
+          player.hp--;
 
           if (player.hp <= 0) {
             gameServer.settle();

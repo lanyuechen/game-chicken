@@ -1,4 +1,3 @@
-import config from '@/config';
 import { databus } from '@/utils/databus';
 import { compareVersion, showTip } from '@/utils/utils';
 import { ROOM_STATE, MSG } from '@/constant';
@@ -73,7 +72,7 @@ class GameServer {
     if (!this.isVersionLow) this.server.onMatch(this.onMatchHandler);
 
     this.server.onGameStart((res) => {
-      console.log('来自系统的onStart');
+      console.log('来自系统的onStart', res);
     });
 
     const reconnect = async () => {

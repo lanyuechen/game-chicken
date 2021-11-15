@@ -53,7 +53,7 @@ export default memo(() => {
     <Container>
       <Bullets />
       <Players />
-      <CountDown count={3} x={config.GAME_WIDTH / 2} y={330} onComplete={() => setActive(true)} />
+      {/* <CountDown count={3} x={config.GAME_WIDTH / 2} y={330} onComplete={() => setActive(true)} /> */}
       <JoyStick eventDispatch={handleJoyStick} disabled={!active} />
       <Skill eventDispatch={handleSkill} disabled={!active} />
       <Back onBack={() => showModal('离开房间会游戏结束！你确定吗？')} />

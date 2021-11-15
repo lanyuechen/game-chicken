@@ -27,12 +27,12 @@ export default class MovableObject {
     this.speed = speed || 0;
     this.speedX = 0;
     this.speedY = 0;
-    this.rotation = rotation || 0;
-    
-    this.setSpeed(this.speed, this.rotation);
 
-    this.destRotation = 0;
-    this.frameRotation = 0;
+    this.rotation = rotation || 0;
+    this.frameRotation = this.rotation;
+    this.destRotation = this.rotation;
+
+    this.setSpeed(this.speed, this.rotation);
 
     this.radius = Math.sqrt((this.width / 2) ** 2 + (this.height / 2) ** 2);
   }
