@@ -88,7 +88,7 @@ export default () => {
       ]
     });
 
-    // music.playShoot();
+    music.playShoot();
   }, []);
 
   const updatePlayerList = useCallback((roomInfo) => {
@@ -135,7 +135,7 @@ export default () => {
   }, []);
 
   usePreditUpdate((dt) => {
-    databus.players.forEach((player, i) => {
+    databus.players.forEach(player => {
       player.preditUpdate(dt, true);
       // update(['players', i], {
       //   $set: player,
@@ -144,7 +144,7 @@ export default () => {
   }, []);
 
   useLogicUpdate((dt) => {
-    databus.players.forEach((player, i) => {
+    databus.players.forEach(player => {
       player.frameUpdate(dt, true);
       // update(['players', i], {
       //   $set: player,

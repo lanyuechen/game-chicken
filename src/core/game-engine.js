@@ -56,7 +56,7 @@ export default class extends PIXI.Application {
     console.log('[onShow]', data);
   }
 
-  onLoop(dt) {
+  onLoop() {
     // console.log('[onLoop]', dt);
   }
 
