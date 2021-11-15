@@ -1,9 +1,10 @@
 import React, { useMemo } from 'react';
-import { Container, Text } from '@inlet/react-pixi';
+import { Container, Text, Sprite } from '@inlet/react-pixi';
 import Button from '@/components/ui/button';
 
 import config from '@/config';
 import gameServer from '@/core/game-server';
+import { ROLE } from '@/constant';
 
 const PADDING = 100;
 
@@ -58,7 +59,7 @@ export default () => {
             x={100 / 2}
             y={100 + 70}
           />
-          {member.role === config.roleMap.owner && (
+          {member.role === ROLE.OWNER && (
             <Sprite
               image="images/hosticon.png"
               width={30}

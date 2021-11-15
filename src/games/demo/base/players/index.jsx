@@ -9,6 +9,7 @@ import MovableObject from '@/utils/movable-object';
 import gameServer from '@/core/game-server';
 import * as modal from '@/components/ui/modal';
 import music from '@/core/music';
+import { MSG, ROLE } from '@/constant';
 
 import Player from './player';
 import Hp from './hp';
@@ -23,7 +24,7 @@ export default () => {
           content: '对方已离开房间，无法继续进行PK！', 
           showCancel: false,
           onOk: () => {
-            if (databus.selfMemberInfo.role === config.roleMap.owner) {
+            if (databus.selfMemberInfo.role === ROLE.OWNER) {
               gameServer.ownerLeaveRoom();
             } else {
               gameServer.memberLeaveRoom();
@@ -41,13 +42,13 @@ export default () => {
           return;
         }
         switch (obj.e) {
-          case config.msg.SHOOT:
+          case MSG.SHOOT:
             shoot(player);
             break;
-          case config.msg.MOVE_DIRECTION:
+          case MSG.MOVE_DIRECTION:
             player.setDestRotation(obj.d);
             break;
-          case config.msg.MOVE_STOP:
+          case MSG.MOVE_STOP:
             player.setSpeed(0);
             player.desDegree = player.frameDegree;
             break;
@@ -92,7 +93,7 @@ export default () => {
 
   const updatePlayerList = useCallback((roomInfo) => {
     const players = roomInfo.memberList.map((userInfo, i) => {
-      const isLeft = userInfo.role === config.roleMap.owner || (databus.matchPattern && i);
+      const isLeft = userInfo.role === ROLE.OWNER|| (databus.matchPattern && i);
 
       return new MovableObject({
         ...userInfo,
@@ -149,7 +150,7 @@ export default () => {
   return (
     <Container>
       {databus.players.map((member, i) => {
-        const isLeft = member.role === config.roleMap.owner || (databus.matchPattern && i);
+        const isLeft = member.role === ROLE.OWNER || (databus.matchPattern && i);
         const width = getTextWidth('生命值：', { fontSize: 24 });
         return (
           <Container key={member.clientId} x={isLeft ? 0 : config.GAME_WIDTH - 231 - 253 - 330}>

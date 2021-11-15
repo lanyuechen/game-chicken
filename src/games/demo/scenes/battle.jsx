@@ -9,6 +9,7 @@ import config from '@/config';
 import gameServer from '@/core/game-server';
 import { useLogicUpdate } from '@/utils/use-tick';
 import { databus } from '@/utils/databus';
+import { MSG, ROLE } from '@/constant';
 
 import JoyStick from '../base/joystick';
 import Skill from '../base/skill';
@@ -34,15 +35,15 @@ export default memo(() => {
   const handleJoyStick = (e) => {
     let evt =
       e === -9999
-        ? { e: config.msg.MOVE_STOP, n: databus.selfClientId }
-        : { e: config.msg.MOVE_DIRECTION, n: databus.selfClientId, d: e.degree };
+        ? { e: MSG.MOVE_STOP, n: databus.selfClientId }
+        : { e: MSG.MOVE_DIRECTION, n: databus.selfClientId, d: e.degree };
     gameServer.uploadFrame([JSON.stringify(evt)]);
   }
 
   const handleSkill = () => {
     gameServer.uploadFrame([
       JSON.stringify({
-        e: config.msg.SHOOT,
+        e: MSG.SHOOT,
         n: databus.selfClientId,
       }),
     ]);
@@ -53,7 +54,7 @@ export default memo(() => {
       content, 
       showCancel,
       onOk: () => {
-        if (databus.selfMemberInfo.role === config.roleMap.owner) {
+        if (databus.selfMemberInfo.role === ROLE.OWNER) {
           gameServer.ownerLeaveRoom();
         } else {
           gameServer.memberLeaveRoom();

@@ -15,13 +15,6 @@ export default {
   GAME_WIDTH: 667 * 2,
   GAME_HEIGHT: 375 * 2,
 
-  roomState: {
-    inTeam: 1,
-    gameStart: 2,
-    gameEnd: 3,
-    roomDestroy: 4,
-  },
-
   deviceinfo,
 
   resources: [
@@ -34,18 +27,6 @@ export default {
     'images/hosticon.png',
     'images/iconready.png',
   ],
-
-  msg: {
-    SHOOT: 1,
-    MOVE_DIRECTION: 2,
-    MOVE_STOP: 3,
-    STAT: 4,
-  },
-
-  roleMap: {
-    owner: 1,
-    partner: 0,
-  },
 
   playerHp: 100,
 };

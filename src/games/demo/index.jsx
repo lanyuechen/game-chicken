@@ -9,6 +9,7 @@ import Battle from './scenes/battle';
 import config from '@/config';
 import gameServer from '@/core/game-server';
 import { databus } from '@/utils/databus';
+import { ROLE } from '@/constant';
 
 import Tween from '@/core/tween';
 
@@ -93,7 +94,7 @@ export default () => {
             return;
           }
           const room =
-            databus.selfMemberInfo.role === config.roleMap.owner
+            databus.selfMemberInfo.role === ROLE.OWNER
               ? 'ownerLeaveRoom'
               : 'memberLeaveRoom';
 

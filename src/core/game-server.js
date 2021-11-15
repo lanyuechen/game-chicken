@@ -1,6 +1,7 @@
 import config from '@/config';
 import { databus } from '@/utils/databus';
 import { compareVersion, showTip } from '@/utils/utils';
+import { ROOM_STATE, MSG } from '@/constant';
 
 class GameServer {
   constructor() {
@@ -220,7 +221,7 @@ class GameServer {
         JSON.stringify({
           c: ++this.statCount,
           t: Date.now(),
-          e: config.msg.STAT,
+          e: MSG.STAT,
           id: databus.selfClientId,
         }),
       ]);
@@ -269,7 +270,7 @@ class GameServer {
       (res.actionList || []).forEach((oneFrame) => {
         let obj = JSON.parse(oneFrame);
 
-        if (obj.e === config.msg.STAT && obj.id === databus.selfClientId) {
+        if (obj.e === MSG.STAT && obj.id === databus.selfClientId) {
           this.delay = new Date() - obj.t;
           this.avgDelay = (this.avgDelay * (obj.c - 1) + this.delay) / obj.c;
         }
@@ -305,7 +306,7 @@ class GameServer {
         if (
           res.data &&
           res.data.roomInfo &&
-          res.data.roomInfo.roomState === config.roomState.gameStart
+          res.data.roomInfo.roomState === ROOM_STATE.GAME_START
         ) {
           console.log('查询到还有没结束的游戏', res.data);
           wx.showModal({

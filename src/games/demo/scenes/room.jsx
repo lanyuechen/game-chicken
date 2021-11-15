@@ -5,7 +5,7 @@ import Button from '@/components/ui/button';
 import config from '@/config';
 import gameServer from '@/core/game-server';
 import { databus } from '@/utils/databus';
-
+import { ROLE } from '@/constant';
 import { showTip } from '@/utils/utils';
 
 const emptyUser = {
@@ -85,7 +85,7 @@ export default () => {
             x={144 / 2}
             y={144 + 23}
           />
-          {member.role === config.roleMap.owner && (
+          {member.role === ROLE.OWNER && (
             <Sprite
               image="images/hosticon.png"
               scale={0.8}
@@ -113,7 +113,7 @@ export default () => {
               gameServer.updateReadyStatus(!myself.isReady);
             }}
           />
-          {myself.role === config.roleMap.owner && (
+          {myself.role === ROLE.OWNER && (
             <Button
               image="images/start.png"
               x={config.GAME_WIDTH / 2 + 159}
@@ -150,7 +150,7 @@ export default () => {
                   return;
                 }
     
-                if (databus.selfMemberInfo.role === config.roleMap.owner) {
+                if (databus.selfMemberInfo.role === ROLE.OWNER) {
                   gameServer.ownerLeaveRoom();
                 } else {
                   gameServer.memberLeaveRoom();
