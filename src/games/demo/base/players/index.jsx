@@ -5,7 +5,7 @@ import config from '@/config';
 import { databus, useUpdate } from '@/utils/databus';
 import { useRenderUpdate, useLogicUpdate, usePreditUpdate } from '@/utils/use-tick';
 import { getTextWidth } from '@/utils/utils';
-import MovableObject from '@/utils/movable-object2';
+import MovableObject from '@/utils/movable-object';
 import gameServer from '@/core/game-server';
 import * as modal from '@/components/ui/modal';
 import music from '@/base/music';
