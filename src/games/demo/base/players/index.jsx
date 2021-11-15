@@ -46,7 +46,7 @@ export default () => {
             shoot(player);
             break;
           case MSG.MOVE_DIRECTION:
-            player.setDestRotation(obj.d);
+            player.setDestRotation(obj.r);
             break;
           case MSG.MOVE_STOP:
             player.setSpeed(0);

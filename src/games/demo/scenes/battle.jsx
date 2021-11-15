@@ -36,7 +36,7 @@ export default memo(() => {
     let evt =
       e === -9999
         ? { e: MSG.MOVE_STOP, n: databus.selfClientId }
-        : { e: MSG.MOVE_DIRECTION, n: databus.selfClientId, d: e.degree };
+        : { e: MSG.MOVE_DIRECTION, n: databus.selfClientId, r: e.radian };
     gameServer.uploadFrame([JSON.stringify(evt)]);
   }
 

@@ -58,8 +58,8 @@ export default class MovableObject {
     this.speedY = -y;
   }
 
-  setDestRotation(degree) {
-    this.destRotation = degree * Math.PI / 180;
+  setDestRotation(radian) {
+    this.destRotation = radian;
   }
 
   checkNotInScreen() {
