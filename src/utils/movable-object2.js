@@ -16,24 +16,25 @@ export default class MovableObject {
 
     this.x = x || 0;
     this.y = y || 0;
-    this.frameX = x;
-    this.frameY = y;
-    this.preditX = x;
-    this.preditY = y;
+    this.frameX = this.x;
+    this.frameY = this.y;
+    this.preditX = this.x;
+    this.preditY = this.y;
 
     this.width = width;
     this.height = height;
 
-    this.speed = speed;
+    this.speed = speed || 0;
     this.speedX = 0;
     this.speedY = 0;
+    this.rotation = rotation || 0;
+    
+    this.setSpeed(this.speed, this.rotation);
 
     this.currDegree = 0;
     this.frameDegree = 0;
     this.desDegree = 0;
     this.frameRotation = 0;
-
-    this.setSpeed(speed, rotation);
 
     this.radius = Math.sqrt((this.width / 2) ** 2 + (this.height / 2) ** 2);
   }
@@ -51,7 +52,7 @@ export default class MovableObject {
 
   setSpeed(speed, rotation) {
     this.speed = speed;
-    this.rotation = rotation;
+    this.rotation = rotation || this.rotation;
 
     const { x, y } = velocityDecomposition(this.speed, this.rotation);
 

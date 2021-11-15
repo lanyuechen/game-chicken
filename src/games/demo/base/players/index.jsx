@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { Container, Text } from '@inlet/react-pixi';
 
 import config from '@/config';
@@ -8,6 +8,7 @@ import { getTextWidth } from '@/utils/utils';
 import MovableObject from '@/utils/movable-object2';
 import gameServer from '@/core/game-server';
 import * as modal from '@/components/ui/modal';
+import music from '@/base/music';
 
 import Player from './player';
 import Hp from './hp';
@@ -18,10 +19,40 @@ export default () => {
   useEffect(() => {
     gameServer.event.on('onRoomInfoChange', (roomInfo) => {
       if (roomInfo.memberList.length < 2) {
-        showModal('对方已离开房间，无法继续进行PK！', false);
+        modal.show({
+          content: '对方已离开房间，无法继续进行PK！', 
+          showCancel: false,
+          onOk: () => {
+            if (databus.selfMemberInfo.role === config.roleMap.owner) {
+              gameServer.ownerLeaveRoom();
+            } else {
+              gameServer.memberLeaveRoom();
+            }
+          }
+        });
       } else {
         updatePlayerList(roomInfo);
       }
+    });
+
+    gameServer.event.on('onActionList', (obj) => {
+      databus.players.forEach(player => {
+        if (player.clientId !== obj.n) {
+          return;
+        }
+        switch (obj.e) {
+          case config.msg.SHOOT:
+            shoot(player);
+            break;
+          case config.msg.MOVE_DIRECTION:
+            player.setDestDegree(obj.d);
+            break;
+          case config.msg.MOVE_STOP:
+            player.setSpeed(0);
+            player.desDegree = player.frameDegree;
+            break;
+        }
+      });
     });
 
     if (!databus.matchPattern) {
@@ -32,10 +63,34 @@ export default () => {
 
     return () => {
       gameServer.event.off('onRoomInfoChange');
+      gameServer.event.off('onActionList');
     }
   }, []);
 
-  const updatePlayerList = (roomInfo) => {
+  const shoot = useCallback((player) => {
+    const half = parseInt(45 * config.dpr / 2);
+    const { x, y, rotation } = player;
+
+    const bullet = new MovableObject({
+      clientId: player.clientId,
+      x: x + half * Math.cos(rotation),
+      y: y + half * Math.sin(rotation),
+      width: 10 * config.dpr,
+      height: 5 * config.dpr,
+      rotation: player.frameRotation,
+      speed: 0.7,
+    });
+
+    update('bullets', {
+      $push: [
+        bullet
+      ]
+    });
+
+    // music.playShoot();
+  }, []);
+
+  const updatePlayerList = useCallback((roomInfo) => {
     const players = roomInfo.memberList.map((userInfo, i) => {
       const isLeft = userInfo.role === config.roleMap.owner || (databus.matchPattern && i);
 
@@ -45,7 +100,6 @@ export default () => {
         y: config.GAME_HEIGHT / 2,
         width: 45 * config.dpr,
         height: 45 * config.dpr,
-        speed: 0.2,
         rotation: isLeft ? 0 : Math.PI,
       })
     });
@@ -53,48 +107,38 @@ export default () => {
     update('players', {
       $set: players
     });
-  }
+  }, []);
 
   useRenderUpdate((dt) => {
-    
+    update('players', {
+      $set: databus.players.map(player => {
+        player.renderUpdate(dt);
+        return player;
+      })
+    });
   }, []);
 
   usePreditUpdate((dt) => {
-    
+    databus.players.forEach((player, i) => {
+      player.preditUpdate(dt, true);
+      // update(['players', i], {
+      //   $set: player,
+      // });
+    });
   }, []);
 
   useLogicUpdate((dt) => {
-    
-  }, []);
-
-  const showModal = (content, showCancel = true) => {
-    modal.show({
-      content, 
-      showCancel,
-      onOk: () => {
-        if (databus.selfMemberInfo.role === config.roleMap.owner) {
-          gameServer.ownerLeaveRoom();
-        } else {
-          gameServer.memberLeaveRoom();
-        }
-      }
+    databus.players.forEach((player, i) => {
+      player.frameUpdate(dt, true);
+      // update(['players', i], {
+      //   $set: player,
+      // });
     });
-  }
-
-  const members = databus.players;
-
-  const handleSetPlayer = (clientId, player) => {
-    if (player) {
-      databus.playerMap[clientId] = player;
-      databus.playerList.push(player);
-    }
-  }
-
-  console.log('=====players render', databus.players)
+  }, []);
 
   return (
     <Container>
-      {members.map((member, i) => {
+      {databus.players.map((member, i) => {
         const isLeft = member.role === config.roleMap.owner || (databus.matchPattern && i);
         const width = getTextWidth('生命值：', { fontSize: 24 });
         return (
@@ -116,16 +160,16 @@ export default () => {
           </Container>
         );
       })}
-      {members.map((member, i) => {
-        const isLeft = member.role === config.roleMap.owner || (databus.matchPattern && i);
+      {databus.players.map(player => {
         return (
           <Player
-            key={member.clientId}
-            clientId={member.clientId}
-            ref={(ele) => handleSetPlayer(member.clientId, ele)}
-            x={isLeft ? 90 / 2 : config.GAME_WIDTH - 90 / 2}
-            y={config.GAME_HEIGHT / 2}
-            rotation={isLeft ? 0 : Math.PI}
+            key={player.clientId}
+            clientId={player.clientId}
+            x={player.x}
+            y={player.y}
+            width={player.width}
+            height={player.height}
+            rotation={player.rotation}
           />
         );
       })}
