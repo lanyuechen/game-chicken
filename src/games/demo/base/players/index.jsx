@@ -8,7 +8,7 @@ import { getTextWidth } from '@/utils/utils';
 import MovableObject from '@/utils/movable-object';
 import gameServer from '@/core/game-server';
 import * as modal from '@/components/ui/modal';
-import music from '@/base/music';
+import music from '@/core/music';
 
 import Player from './player';
 import Hp from './hp';
@@ -45,7 +45,7 @@ export default () => {
             shoot(player);
             break;
           case config.msg.MOVE_DIRECTION:
-            player.setDestDegree(obj.d);
+            player.setDestRotation(obj.d);
             break;
           case config.msg.MOVE_STOP:
             player.setSpeed(0);
@@ -103,6 +103,16 @@ export default () => {
         rotation: isLeft ? 0 : Math.PI,
       })
     });
+
+    // 电脑玩家
+    // players.push(new MovableObject({
+    //   clientId: 'xxx',
+    //   x: config.GAME_WIDTH - 90 / 2,
+    //   y: config.GAME_HEIGHT / 2,
+    //   width: 45 * config.dpr,
+    //   height: 45 * config.dpr,
+    //   rotation: Math.PI,
+    // }))
 
     update('players', {
       $set: players

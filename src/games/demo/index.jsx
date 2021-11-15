@@ -10,7 +10,7 @@ import config from '@/config';
 import gameServer from '@/core/game-server';
 import { databus } from '@/utils/databus';
 
-import Tween from '@/base/tween';
+import Tween from '@/core/tween';
 
 export default () => {
   const app = useApp();

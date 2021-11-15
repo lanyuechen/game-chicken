@@ -31,9 +31,7 @@ export default class MovableObject {
     
     this.setSpeed(this.speed, this.rotation);
 
-    this.currDegree = 0;
-    this.frameDegree = 0;
-    this.desDegree = 0;
+    this.destRotation = 0;
     this.frameRotation = 0;
 
     this.radius = Math.sqrt((this.width / 2) ** 2 + (this.height / 2) ** 2);
@@ -60,8 +58,8 @@ export default class MovableObject {
     this.speedY = -y;
   }
 
-  setDestDegree(degree) {
-    this.desDegree = degree * Math.PI / 180;
+  setDestRotation(degree) {
+    this.destRotation = degree * Math.PI / 180;
   }
 
   checkNotInScreen() {
@@ -83,16 +81,15 @@ export default class MovableObject {
       this.y += (this.preditY - this.y) * percent;
     }
 
-    if (this.currDegree !== this.frameDegree) {
-      const dis = getMove(this.currDegree, this.frameDegree);
+    if (this.rotation !== this.frameRotation) {
+      const dis = getMove(this.rotation, this.frameRotation);
 
       let temp = (dt / (1000 / 30)) * 10;
       let percent = getNumInRange(temp / Math.abs(dis), 0, 1);
 
-      this.currDegree += dis * percent;
+      this.rotation += dis * percent;
 
-      this.currDegree = limitNumInRange(this.currDegree, 0, 2 * Math.PI);
-      this.rotation = this.currDegree;
+      this.rotation = limitNumInRange(this.rotation, 0, 2 * Math.PI);
     }
 
     return this;
@@ -106,20 +103,18 @@ export default class MovableObject {
       this.frameY = getNumInRange(this.frameY, this.radius, config.GAME_HEIGHT - this.radius);
     }
 
-    if (this.frameDegree !== this.desDegree) {
-      const dis = getMove(this.frameDegree, this.desDegree);
+    if (this.frameRotation !== this.destRotation) {
+      const dis = getMove(this.frameRotation, this.destRotation);
 
       if (Math.abs(dis) <= 10 * Math.PI / 180) {
-        this.frameDegree = this.desDegree;
+        this.frameRotation = this.destRotation;
       } else {
-        this.frameDegree += Math.sign(dis) * 10 * Math.PI / 180;
+        this.frameRotation += Math.sign(dis) * 10 * Math.PI / 180;
       }
 
-      this.frameDegree = limitNumInRange(this.frameDegree, 0, 2 * Math.PI);
+      this.frameRotation = limitNumInRange(this.frameRotation, 0, 2 * Math.PI);
 
-      this.frameRotation = this.frameDegree;
-
-      this.setSpeed(0.2, this.frameDegree);
+      this.setSpeed(0.2, this.frameRotation);
     }
     return this;
   }

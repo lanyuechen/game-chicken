@@ -15,19 +15,6 @@ export const getTextWidth = (str, style = {}) => {
   return width;
 }
 
-export function createText(options) {
-  const { str, x, y } = options;
-  const style = options.style || { fontSize: 36, align: 'center' };
-  let text = new PIXI.Text(str, style);
-  if (!options.left) {
-    text.anchor.set(0.5);
-  }
-  text.x = x || 0;
-  text.y = y || 0;
-
-  return text;
-}
-
 export function compareVersion(v1, v2) {
   v1 = v1.split('.');
   v2 = v2.split('.');

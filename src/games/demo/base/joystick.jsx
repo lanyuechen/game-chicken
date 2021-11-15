@@ -5,7 +5,7 @@ import Button from '@/components/ui/button';
 import useStore from '@/utils/use-store';
 
 import config from '@/config';
-import Tween from '@/base/tween';
+import Tween from '@/core/tween';
 import { none, convertRadian2Degree, convertDegree2Radian } from '@/utils/utils';
 
 // 虚拟摇杆的大小
