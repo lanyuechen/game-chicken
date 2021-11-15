@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Text } from '@inlet/react-pixi';
+import { noop } from '@/utils/utils';
 
 export default (props) =>{
-  const { count: defaultCount, ...otherProps } = props;
+  const { count: defaultCount, onComplete = noop, ...otherProps } = props;
 
   const [count, setCount] = useState(defaultCount);
 
@@ -11,6 +12,8 @@ export default (props) =>{
       setTimeout(() => {
         setCount(count - 1);
       }, 1000);
+    } else {
+      onComplete();
     }
   }, [count]);
 

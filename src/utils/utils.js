@@ -102,7 +102,7 @@ export function getNumInRange(num, min, max) {
   return num;
 }
 
-export function none() {}
+export function noop() {}
 
 export function showTip(title = '', duration = 1500) {
   wx.showToast({

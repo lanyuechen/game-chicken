@@ -6,7 +6,7 @@ import useStore from '@/utils/use-store';
 
 import config from '@/config';
 import Tween from '@/core/tween';
-import { none, convertRadian2Degree, convertDegree2Radian } from '@/utils/utils';
+import { noop, convertRadian2Degree, convertDegree2Radian } from '@/utils/utils';
 
 // 虚拟摇杆的大小
 const JOYSTICKWIDTH = 128.7 * config.dpr;
@@ -48,7 +48,7 @@ const getPointInCircle = (center, r, x, y) => {
 }
 
 export default (props) => {
-  const { eventDispatch = none, disabled } = props;
+  const { eventDispatch = noop, disabled } = props;
   const store = useStore({
     touchId: -1,  // 用于限制区域内不能进行多点触控
     touchStart: false,

@@ -1,4 +1,4 @@
-import { none } from '@/utils/utils';
+import { noop } from '@/utils/utils';
 import { databus } from '@/utils/databus';
 
 class Login {
@@ -6,7 +6,7 @@ class Login {
     this.userInfo = {};
   }
 
-  do(callback = none) {
+  do(callback = noop) {
     this.loginCallback = callback;
 
     wx.getSetting({
