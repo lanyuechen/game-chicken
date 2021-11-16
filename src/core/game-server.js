@@ -452,9 +452,7 @@ class GameServer {
 
     // 重连中不执行渲染
     if (!this.reconnecting) {
-      if (databus.renderUpdateList && databus.renderUpdateList.length) {
-        databus.renderUpdateList.forEach(renderUpdate => renderUpdate(dt));
-      }
+      this.event.emit('renderUpdate', dt);
     }
 
     // 本地从游戏开始到现在的运行时间
@@ -483,9 +481,7 @@ class GameServer {
     const frame = this.frames.shift();
 
     // 每次执行逻辑帧，将指令同步后，演算游戏状态
-    if (databus.logicUpdateList && databus.logicUpdateList.length) {
-      databus.logicUpdateList.forEach(logicUpdate => logicUpdate(this.frameInterval, frame.frameId));
-    }
+    this.event.emit('frameUpdate', this.frameInterval, frame.frameId);
 
     (frame.actionList || []).forEach((oneFrame) => {
       let obj = JSON.parse(oneFrame);
@@ -493,9 +489,7 @@ class GameServer {
       this.event.emit('onActionList', obj);
     });
 
-    if (databus.preditUpdateList && databus.preditUpdateList.length) {
-      databus.preditUpdateList.forEach(preditUpdate => preditUpdate(this.frameInterval));
-    }
+    this.event.emit('preditUpdate', this.frameInterval);
   }
 
   settle() {

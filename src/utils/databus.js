@@ -12,9 +12,6 @@ export let databus = {
   playerList: [],
   currAccessInfo: '',
   userInfo: {},
-  renderUpdateList: [],
-  logicUpdateList: [],
-  preditUpdateList: [],
 };
 
 const DatabusContext = createContext([

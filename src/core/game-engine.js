@@ -63,7 +63,7 @@ export default class extends PIXI.Application {
   /**
    * 游戏视口自适应
    */
-   scaleToScreen() {
+  scaleToScreen() {
     const x = window.innerWidth / config.VIEW_WIDTH;
     const y = window.innerHeight / config.VIEW_HEIGHT;
 

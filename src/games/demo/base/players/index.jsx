@@ -3,7 +3,7 @@ import { Container, Text } from '@inlet/react-pixi';
 
 import config from '@/config';
 import { databus, useUpdate } from '@/utils/databus';
-import { useRenderUpdate, useLogicUpdate, usePreditUpdate } from '@/utils/use-tick';
+import { useRenderUpdate, useFrameUpdate, usePreditUpdate } from '@/utils/use-tick';
 import { getTextWidth } from '@/utils/utils';
 import MovableObject from '@/utils/movable-object';
 import gameServer from '@/core/game-server';
@@ -118,8 +118,6 @@ export default () => {
       hp: 80,
     }));
 
-    console.log('==========', players);
-
     update('players', {
       $set: players
     });
@@ -143,7 +141,7 @@ export default () => {
     });
   }, []);
 
-  useLogicUpdate((dt) => {
+  useFrameUpdate((dt) => {
     databus.players.forEach(player => {
       player.frameUpdate(dt, true);
       // update(['players', i], {

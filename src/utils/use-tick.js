@@ -1,32 +1,15 @@
 import { useEffect } from 'react';
-import { databus } from '@/utils/databus';
+import gameServer from '@/core/game-server';
 
-export const useRenderUpdate = (cb) => {
+export const updateHook = (key) => (cb) => {
   useEffect(() => {
-    databus.renderUpdateList = databus.renderUpdateList || [];
-    databus.renderUpdateList.push(cb);
+    gameServer.event.on(key, cb);
     return () => {
-      databus.renderUpdateList = databus.renderUpdateList.filter(d => d !== cb);
+      gameServer.event.off(key, cb);
     }
   }, []);
 }
 
-export const useLogicUpdate = (cb) => {
-  useEffect(() => {
-    databus.logicUpdateList = databus.logicUpdateList || [];
-    databus.logicUpdateList.push(cb);
-    return () => {
-      databus.logicUpdateList = databus.logicUpdateList.filter(d => d !== cb);
-    }
-  }, []);
-}
-
-export const usePreditUpdate = (cb) => {
-  useEffect(() => {
-    databus.preditUpdateList = databus.preditUpdateList || [];
-    databus.preditUpdateList.push(cb);
-    return () => {
-      databus.preditUpdateList = databus.preditUpdateList.filter(d => d !== cb);
-    }
-  }, []);
-}
+export const useRenderUpdate = updateHook('renderUpdate');
+export const useFrameUpdate = updateHook('frameUpdate');
+export const usePreditUpdate = updateHook('preditUpdate');

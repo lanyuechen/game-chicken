@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { useRenderUpdate, useLogicUpdate, usePreditUpdate } from '@/utils/use-tick';
+import { useRenderUpdate, useFrameUpdate, usePreditUpdate } from '@/utils/use-tick';
 import { databus, useUpdate } from '@/utils/databus';
 import { checkCircleCollision } from '@/utils/utils';
 import gameServer from '@/core/game-server';
@@ -36,7 +36,7 @@ export default () => {
     });
   });
 
-  useLogicUpdate((dt) => {
+  useFrameUpdate((dt) => {
     databus.bullets.forEach((bullet, i) => {
       bullet.frameUpdate(dt);
       if (bullet.checkNotInScreen()) {

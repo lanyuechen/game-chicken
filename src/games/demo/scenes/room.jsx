@@ -13,7 +13,7 @@ const emptyUser = {
   nickname: '点击邀请好友',
   headimg: 'images/avatar_default.png',
   isEmpty: true,
-  isReady: false,
+  isReady: true,
 };
 
 const PADDING = 136;
