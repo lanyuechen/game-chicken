@@ -1,7 +1,6 @@
 import React, { memo, useState, useEffect, useCallback } from 'react';
 import { Container } from '@inlet/react-pixi';
 import Debug from '@/components/debug';
-import CountDown from '@/components/count-down';
 import JoyStick from '@/components/joystick';
 import * as modal from '@/components/ui/modal';
 import Back from '@/components/ui/back';
@@ -19,7 +18,6 @@ import Bullet from '../base/bullet';
 import Players from '../base/players';
 
 export default memo(() => {
-  const [active, setActive] = useState(true);
   const [players, setPlayers] = useState([]);
   const [bullets, setBullets] = useState([]);
 
@@ -188,9 +186,8 @@ export default memo(() => {
         />
       ))}
       <Players players={players} onShoot={handleShoot} />
-      {/* <CountDown count={3} x={config.GAME_WIDTH / 2} y={330} onComplete={() => setActive(true)} /> */}
-      <JoyStick eventDispatch={handleJoyStick} disabled={!active} />
-      <Skill eventDispatch={handleSkill} disabled={!active} />
+      <JoyStick eventDispatch={handleJoyStick} />
+      <Skill eventDispatch={handleSkill} />
       <Back onBack={() => showModal('离开房间会游戏结束！你确定吗？')} />
       <Debug />
     </Container>

@@ -8,14 +8,18 @@ export default (props) =>{
   const [count, setCount] = useState(defaultCount);
 
   useEffect(() => {
+    let timeout;
     if (count > 0) {
-      setTimeout(() => {
-        setCount(count - 1);
+      timeout = setTimeout(() => {
+        setCount(count => count - 1);
       }, 1000);
     } else {
       onComplete();
     }
-  }, [count]);
+    return () => {
+      clearTimeout(timeout);
+    }
+  }, []);
 
   if (count <= 0) {
     return null;
