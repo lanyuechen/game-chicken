@@ -1,4 +1,4 @@
-import { databus } from '@/utils/databus';
+import databus from '@/core/databus';
 import { compareVersion, showTip } from '@/utils/utils';
 import { ROOM_STATE, MSG } from '@/constant';
 
@@ -481,15 +481,13 @@ class GameServer {
     const frame = this.frames.shift();
 
     // 每次执行逻辑帧，将指令同步后，演算游戏状态
-    this.event.emit('frameUpdate', this.frameInterval, frame.frameId);
+    this.event.emit('preditUpdate', this.frameInterval, frame.frameId);
 
     (frame.actionList || []).forEach((oneFrame) => {
       let obj = JSON.parse(oneFrame);
 
       this.event.emit('onActionList', obj);
     });
-
-    this.event.emit('preditUpdate', this.frameInterval);
   }
 
   settle() {

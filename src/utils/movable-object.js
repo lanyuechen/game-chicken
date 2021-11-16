@@ -16,8 +16,6 @@ export default class MovableObject {
 
     this.x = x || 0;
     this.y = y || 0;
-    this.frameX = this.x;
-    this.frameY = this.y;
     this.preditX = this.x;
     this.preditY = this.y;
 
@@ -29,7 +27,7 @@ export default class MovableObject {
     this.speedY = 0;
 
     this.rotation = rotation || 0;
-    this.frameRotation = this.rotation;
+    this.preditRotation = this.rotation;
     this.destRotation = this.rotation;
 
     this.setSpeed(this.speed, this.rotation);
@@ -39,7 +37,7 @@ export default class MovableObject {
 
   get collisionCircle() {
     return {
-      center: { x: this.frameX, y: this.frameY },
+      center: { x: this.x, y: this.y },
       radius: this.radius,
     };
   }
@@ -64,25 +62,27 @@ export default class MovableObject {
 
   checkNotInScreen() {
     return !!(
-      this.frameX + this.radius < 0 ||
-      this.frameX - this.radius > config.GAME_WIDTH ||
-      this.frameY + this.radius < 0 ||
-      this.frameY - this.radius > config.GAME_HEIGHT
+      this.preditX + this.radius < 0 ||
+      this.preditX - this.radius > config.GAME_WIDTH ||
+      this.preditY + this.radius < 0 ||
+      this.preditY - this.radius > config.GAME_HEIGHT
     );
   }
 
   renderUpdate(dt) {
-    if (this.x !== this.preditX || this.y !== this.preditY) {
+    let isUpdate = false;
+    if (this.speed && (this.x !== this.preditX || this.y !== this.preditY)) {
       let dis = getDistance({ x: this.x, y: this.y }, { x: this.preditX, y: this.preditY });
       let temp = (dt / (1000 / 30)) * (this.speed * (1000 / 30));
       let percent = getNumInRange(temp / dis, 0, 1);
 
       this.x += (this.preditX - this.x) * percent;
       this.y += (this.preditY - this.y) * percent;
+      isUpdate = true;
     }
 
-    if (this.rotation !== this.frameRotation) {
-      const dis = getMove(this.rotation, this.frameRotation);
+    if (this.rotation !== this.preditRotation) {
+      const dis = getMove(this.rotation, this.preditRotation);
 
       let temp = (dt / (1000 / 30)) * 10;
       let percent = getNumInRange(temp / Math.abs(dis), 0, 1);
@@ -90,33 +90,10 @@ export default class MovableObject {
       this.rotation += dis * percent;
 
       this.rotation = limitNumInRange(this.rotation, 0, 2 * Math.PI);
+      isUpdate = true;
     }
 
-    return this;
-  }
-
-  frameUpdate(dt, notOutOfScreen) {
-    this.frameX += this.speedX * dt;
-    this.frameY += this.speedY * dt;
-    if (notOutOfScreen) {
-      this.frameX = getNumInRange(this.frameX, this.radius, config.GAME_WIDTH - this.radius);
-      this.frameY = getNumInRange(this.frameY, this.radius, config.GAME_HEIGHT - this.radius);
-    }
-
-    if (this.frameRotation !== this.destRotation) {
-      const dis = getMove(this.frameRotation, this.destRotation);
-
-      if (Math.abs(dis) <= 10 * Math.PI / 180) {
-        this.frameRotation = this.destRotation;
-      } else {
-        this.frameRotation += Math.sign(dis) * 10 * Math.PI / 180;
-      }
-
-      this.frameRotation = limitNumInRange(this.frameRotation, 0, 2 * Math.PI);
-
-      this.setSpeed(0.2, this.frameRotation);
-    }
-    return this;
+    return isUpdate;
   }
 
   preditUpdate(dt, notOutOfScreen) {
@@ -126,6 +103,19 @@ export default class MovableObject {
       this.preditX = getNumInRange(this.preditX, this.radius, config.GAME_WIDTH - this.radius);
       this.preditY = getNumInRange(this.preditY, this.radius, config.GAME_HEIGHT - this.radius);
     }
-    return this;
+
+    if (this.preditRotation !== this.destRotation) {
+      const dis = getMove(this.preditRotation, this.destRotation);
+
+      if (Math.abs(dis) <= 10 * Math.PI / 180) {
+        this.preditRotation = this.destRotation;
+      } else {
+        this.preditRotation += Math.sign(dis) * 10 * Math.PI / 180;
+      }
+
+      this.preditRotation = limitNumInRange(this.preditRotation, 0, 2 * Math.PI);
+
+      this.setSpeed(0.2, this.preditRotation);
+    }
   }
 }

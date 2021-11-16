@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Container, Graphics } from '@inlet/react-pixi';
 
-export default (props) => {
+export default memo((props) => {
   const { width, height, x, y, maxHp, hp } = props;
 
   const handleDraw = (g) => {
@@ -22,4 +22,4 @@ export default (props) => {
       <Graphics draw={handleDraw} />
     </Container>
   )
-}
+});

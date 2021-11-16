@@ -11,5 +11,4 @@ export const updateHook = (key) => (cb) => {
 }
 
 export const useRenderUpdate = updateHook('renderUpdate');
-export const useFrameUpdate = updateHook('frameUpdate');
 export const usePreditUpdate = updateHook('preditUpdate');

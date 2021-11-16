@@ -5,7 +5,7 @@ import Button from '@/components/ui/button';
 
 import config from '@/config';
 import gameServer from '@/core/game-server';
-import { databus } from '@/utils/databus';
+import databus from '@/core/databus';
 
 export default () => {
   useEffect(() => {

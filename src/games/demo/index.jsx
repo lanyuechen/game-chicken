@@ -3,7 +3,7 @@ import { Container, useApp } from '@inlet/react-pixi';
 
 import gameServer from '@/core/game-server';
 import Tween from '@/core/tween';
-import { databus } from '@/utils/databus';
+import databus from '@/core/databus';
 import { ROLE } from '@/constant';
 
 import Background from './base/bg';
