@@ -47,7 +47,7 @@ export default memo(() => {
     } 
 
     return () => {
-      gameServer.event.off('onRoomInfoChange');
+      gameServer.event.off('roomInfoChange');
     }
   }, []);
 
@@ -101,15 +101,17 @@ export default memo(() => {
       };
     });
 
-    // 电脑玩家
-    players.push({
-      id: 999,
-      nickname: '电脑玩家',
-      x: config.GAME_WIDTH - 90,
-      y: config.GAME_HEIGHT / 2,
-      rotation: Math.PI,
-      hp: 80,
-    });
+    if (players.length < 2) {
+      // 电脑玩家
+      players.push({
+        id: 999,
+        nickname: '电脑玩家',
+        x: config.GAME_WIDTH - 90,
+        y: config.GAME_HEIGHT / 2,
+        rotation: Math.PI,
+        hp: 80,
+      });
+    }
 
     setPlayers(players);
   }, []);
