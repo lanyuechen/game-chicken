@@ -49,6 +49,8 @@ export default memo(() => {
     });
   }
 
+  console.log('[scene battle]');
+
   return (
     <Container>
       <Bullets />

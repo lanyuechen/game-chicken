@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, memo } from 'react';
 import { Container, Text } from '@inlet/react-pixi';
 
 import config from '@/config';
@@ -177,7 +177,7 @@ export default () => {
       {databus.players.map(player => {
         return (
           <Player
-            key={player.clientId}
+            key={player.id}
             clientId={player.clientId}
             x={player.x}
             y={player.y}

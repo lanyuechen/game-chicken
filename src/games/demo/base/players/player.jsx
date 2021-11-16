@@ -4,6 +4,8 @@ import { AnimatedSprite } from '@inlet/react-pixi';
 export default (props) => {
   const { x, y, width, height, rotation } = props;
 
+  console.log('===', props.clientId)
+
   return (
     <AnimatedSprite
       images={['images/aircraft1.png', 'images/aircraft2.png']}
