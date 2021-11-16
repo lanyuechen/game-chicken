@@ -46,6 +46,7 @@ export default (props) => {
             x={player.x}
             y={player.y}
             rotation={player.rotation}
+            hp={player.hp}
             onShoot={onShoot}
           />
         );

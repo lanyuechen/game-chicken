@@ -9,7 +9,7 @@ import { noop } from '@/utils/utils';
 import databus from '@/core/databus';
 
 export default (props) => {
-  const { id, x, y, rotation, onShoot = noop } = props;
+  const { id, x, y, rotation, hp, onShoot = noop } = props;
   const [state, setState] = useState({ x, y, rotation });
 
   const player = useMemo(() => {
@@ -20,7 +20,7 @@ export default (props) => {
       rotation,
       width: 45 * config.dpr,
       height: 45 * config.dpr,
-      hp: 100,
+      hp,
     });
 
     databus.players.push(mo);
@@ -41,8 +41,7 @@ export default (props) => {
           player.setDestRotation(obj.r);
           break;
         case MSG.MOVE_STOP:
-          player.setSpeed(0);
-          player.desDegree = player.frameDegree;
+          player.stop();
           break;
       }
     };

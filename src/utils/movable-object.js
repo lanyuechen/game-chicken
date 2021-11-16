@@ -46,6 +46,14 @@ export default class MovableObject {
     return new MovableObject(this);
   }
 
+  stop() {
+    this.speed = 0;
+    this.speedX = 0;
+    this.speedY = 0;
+    this.preditRotation = this.rotation;
+    this.destRotation = this.rotation;
+  }
+
   setSpeed(speed, rotation) {
     this.speed = speed;
     this.rotation = rotation || this.rotation;
