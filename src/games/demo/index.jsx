@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Container, useApp } from '@inlet/react-pixi';
 
-import Background from './bg';
-import Home from './scenes/home';
-import Room from './scenes/room';
-import Battle from './scenes/battle';
-
 import gameServer from '@/core/game-server';
+import Tween from '@/core/tween';
 import { databus } from '@/utils/databus';
 import { ROLE } from '@/constant';
 
-import Tween from '@/core/tween';
+import Background from './base/bg';
+import Home from './scenes/home';
+import Room from './scenes/room';
+import Battle from './scenes/battle';
 
 export default () => {
   const app = useApp();

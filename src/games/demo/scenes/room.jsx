@@ -33,15 +33,15 @@ export default () => {
     } 
   }, []);
 
+  if (members.length === 1) {
+    setMembers([...members, emptyUser]);
+  }
+
   const allReady = !members.find(member => !member.isReady);
   const myself = members.find(member => member.clientId === databus.selfClientId);
   if (myself) {
     databus.selfPosNum = myself.posNum;
     databus.selfMemberInfo = myself;
-  }
-
-  if (members.length === 1) {
-    members.push(emptyUser);
   }
 
   return (

@@ -2,6 +2,7 @@ import { useState, useContext, createContext, useCallback } from 'react';
 import update from 'immutability-helper';
 
 export let databus = {
+  matchPattern: void 0,
   players: [],
   bullets: [],
   selfClientId: 1,

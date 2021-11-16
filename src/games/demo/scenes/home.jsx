@@ -44,16 +44,11 @@ export default () => {
         x={config.GAME_WIDTH / 2}
         y={582}
         onClick={() => {
-          // if (this.handling) {
-          //   return;
-          // }
-          // this.handling = true;
           wx.showLoading({
             title: '房间创建中...',
           });
           gameServer.createRoom({}, () => {
             wx.hideLoading();
-            // this.handling = false;
           });
         }}
       />

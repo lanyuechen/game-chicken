@@ -61,25 +61,6 @@ export default class extends PIXI.Application {
   }
 
   /**
-   * 加载场景
-   * @param {PIXI.Container} Scene 
-   * @returns 场景实例
-   */
-  runScene(Scene) {
-    const old = this.stage.getChildByName('scene');
-    if (old) {
-      old.destroy(true);
-    }
-
-    const scene = new Scene();
-    scene.name = scene.sceneName = 'scene';
-    scene.launch();
-    this.stage.addChild(scene);
-
-    return scene;
-  }
-
-  /**
    * 游戏视口自适应
    */
    scaleToScreen() {
