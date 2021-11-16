@@ -46,7 +46,7 @@ export default (props) => {
       }
     };
     
-    gameServer.event.on('onActionList', handleActionList);
+    gameServer.event.on('actionList', handleActionList);
 
     return () => {
       gameServer.event.off('onActionList', handleActionList);

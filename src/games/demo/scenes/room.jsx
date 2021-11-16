@@ -22,7 +22,7 @@ export default () => {
   const [members, setMembers] = useState([]);
 
   useEffect(() => {
-    gameServer.event.on('onRoomInfoChange', (roomInfo) => {
+    gameServer.event.on('roomInfoChange', (roomInfo) => {
       setMembers(roomInfo.memberList || []);
     });
 

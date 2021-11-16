@@ -37,11 +37,11 @@ export default () => {
       setScene('room');
     });
 
-    gameServer.event.on('onGameStart', () => {
+    gameServer.event.on('gameStart', () => {
       setScene('battle');
     });
 
-    gameServer.event.on('onGameEnd', () => {
+    gameServer.event.on('gameEnd', () => {
       gameServer.gameResult.forEach((member) => {
         if (member.nickname === databus.userInfo.nickName) {
           wx.showModal({

@@ -24,7 +24,7 @@ export default memo(() => {
   const [bullets, setBullets] = useState([]);
 
   useEffect(() => {
-    gameServer.event.on('onRoomInfoChange', (roomInfo) => {
+    gameServer.event.on('roomInfoChange', (roomInfo) => {
       if (roomInfo.memberList.length < 2) {
         modal.show({
           content: '对方已离开房间，无法继续进行PK！', 

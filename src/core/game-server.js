@@ -208,9 +208,9 @@ class GameServer {
 
   onGameStart() {
     console.log('onGameStart');
-    this.event.emit('onGameStart');
+    this.event.emit('gameStart');
     /*if ( needEmit ) {
-            this.event.emit('onGameStart');
+            this.event.emit('gameStart');
         }*/
 
     this.hasGameStart = true;
@@ -243,7 +243,7 @@ class GameServer {
   onGameEnd() {
     this.settle();
     this.reset();
-    this.event.emit('onGameEnd');
+    this.event.emit('gameEnd');
 
     clearInterval(this.debugTime);
   }
@@ -295,7 +295,7 @@ class GameServer {
 
   onRoomInfoChange(roomInfo) {
     this.roomInfo = roomInfo;
-    this.event.emit('onRoomInfoChange', roomInfo);
+    this.event.emit('roomInfoChange', roomInfo);
   }
 
   login() {
@@ -375,7 +375,7 @@ class GameServer {
 
     this.event.emit('createRoom');
 
-    this.event.emit('onRoomInfoChange', {
+    this.event.emit('roomInfoChange', {
       memberList: [
         { headimg: avatarUrl, nickname: nickName },
         {
@@ -486,7 +486,7 @@ class GameServer {
     (frame.actionList || []).forEach((oneFrame) => {
       let obj = JSON.parse(oneFrame);
 
-      this.event.emit('onActionList', obj);
+      this.event.emit('actionList', obj);
     });
   }
 
