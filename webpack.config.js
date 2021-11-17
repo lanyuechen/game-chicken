@@ -4,11 +4,12 @@ const CopyPlugin = require('copy-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
 const WebpackBar = require('webpackbar');
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
   mode: 'development',
   entry: './src/game.js',
-  devtool: 'source-map',
+  devtool: 'inline-source-map',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'game.js',
@@ -23,6 +24,7 @@ module.exports = {
     ],
   },
   plugins: [
+    // new BundleAnalyzerPlugin(),
     new WebpackBar(),
     new ESLintPlugin({
       extensions: ['js', 'jsx']

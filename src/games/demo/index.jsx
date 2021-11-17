@@ -2,9 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Container, useApp } from '@inlet/react-pixi';
 
 import gameServer from '@/core/game-server';
-import Tween from '@/core/tween';
 import databus from '@/core/databus';
-import { ROLE } from '@/constant';
 
 import Background from './base/bg';
 import Home from './scenes/home';

@@ -1,3 +1,10 @@
 {
-  "deviceOrientation": "landscape"
+  "deviceOrientation": "landscape",
+  "lockStepOptions": {
+    "gameTick": 33,
+    "UDPReliabilityStrategy": 3,
+    "heartBeatTick": 2000,
+    "offlineTimeLength": 15000,
+    "dataType": "String"
+  }
 }

@@ -303,11 +303,7 @@ class GameServer {
     return this.server.login().then(() => {
       this.server.getLastRoomInfo().then((res) => {
         // 查询到之前的游戏还没结束
-        if (
-          res.data &&
-          res.data.roomInfo &&
-          res.data.roomInfo.roomState === ROOM_STATE.GAME_START
-        ) {
+        if (res.data?.roomInfo?.roomState === ROOM_STATE.GAME_START) {
           console.log('查询到还有没结束的游戏', res.data);
           wx.showModal({
             title: '温馨提示',
