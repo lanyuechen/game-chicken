@@ -2,6 +2,8 @@ import config from '@/config';
 import login from '@/core/login';
 import gameServer from '@/core/game-server';
 import databus from '@/core/databus';
+import Tween from '@/core/tween';
+import { ROLE } from '@/constant';
 
 export default class extends PIXI.Application {
   constructor() {
@@ -49,15 +51,58 @@ export default class extends PIXI.Application {
   }
 
   onLogin() {
-    console.log('[onLogin]');
+    gameServer.login().then(() => {
+      if (databus.currAccessInfo) {
+        this.joinRoom().then(() => gameServer.event.emit('createRoom'));
+      } else {
+        gameServer.event.emit('backHome');
+      }
+    });
   }
 
-  onShow(data) {
-    console.log('[onShow]', data);
-  }
+  onShow(res) {
+    console.log('[wx.onShow]', res);
+    const accessInfo = res.query.accessInfo;
 
-  onLoop() {
-    // console.log('[onLoop]', dt);
+    if (!accessInfo) {
+      return;
+    }
+
+    if (!databus.currAccessInfo) {
+      databus.currAccessInfo = accessInfo;
+      this.joinRoom().then(() => gameServer.event.emit('createRoom'));
+      return;
+    }
+
+    if (accessInfo !== databus.currAccessInfo) {
+      wx.showModal({
+        title: '温馨提示',
+        content: '你要离开当前房间，接受对方的对战邀请吗？',
+        success: (res) => {
+          if (!res.confirm) {
+            return;
+          }
+          const room =
+            databus.selfMemberInfo.role === ROLE.OWNER
+              ? 'ownerLeaveRoom'
+              : 'memberLeaveRoom';
+
+          gameServer[room]((res) => {
+            if (res.errCode) {
+              return wx.showToast({
+                title: '离开房间失败！',
+                icon: 'none',
+                duration: 2000,
+              });
+            }
+
+            databus.currAccessInfo = accessInfo;
+
+            this.joinRoom().then(() => gameServer.event.emit('createRoom'));
+          });
+        },
+      });
+    }
   }
 
   /**
@@ -92,7 +137,10 @@ export default class extends PIXI.Application {
 
   loop() {
     let time = Date.now();
-    this.onLoop(time - this.timer);
+
+    gameServer.update(time - this.timer);
+    Tween.update();
+
     this.timer = time;
     this.renderer.render(this.stage);
     this.aniId = window.requestAnimationFrame(this.bindLoop);

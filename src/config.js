@@ -5,6 +5,8 @@ const deviceinfo = getDeviceInfo();
 export default {
   debug: true,
 
+  matchId: 'XERc0AcOphf3E5ajvATi8kaYvzgWusxONmjMuD8JP60',
+
   dpr: 2,
   windowWidth: deviceinfo.windowWidth,
   windowHeight: deviceinfo.windowHeight,

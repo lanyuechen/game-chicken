@@ -29,13 +29,14 @@ export default () => {
         x={config.GAME_WIDTH / 2}
         y={422}
         onClick={() => {
-          if (gameServer.isVersionLow)
+          if (gameServer.isVersionLow) {
             return wx.showModal({
-              content: '你的微信版本过低，无法演示该功能！',
+              content: '你的微信版本过低，升个级吧！',
               showCancel: false,
               confirmColor: '#02BB00',
             });
-
+          }
+            
           gameServer.createMatchRoom();
         }}
       />

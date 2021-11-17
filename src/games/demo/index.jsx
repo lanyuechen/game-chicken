@@ -14,16 +14,10 @@ import Battle from './scenes/battle';
 export default () => {
   const app = useApp();
   const [loading, setLoading] = useState(true);
-  const [scene, setScene] = useState('battle');
+  const [scene, setScene] = useState('home');
 
   useEffect(() => {
     app.onLoad = () => setLoading(false);
-    app.onLogin = handleLogin;
-    app.onShow = handleShow;
-    app.onLoop = (dt) => {
-      gameServer.update(dt);
-      Tween.update();
-    }
 
     if (databus.currAccessInfo) {
       app.joinRoom().then(() => setScene('room'));
@@ -57,62 +51,13 @@ export default () => {
       });
     });
 
+    return () => {
+      gameServer.event.off('backHome');
+      gameServer.event.off('createRoom');
+      gameServer.event.off('gameStart');
+      gameServer.event.off('gameEnd');
+    }
   }, []);
-
-  const handleLogin = () => {
-    gameServer.login().then(() => {
-      if (databus.currAccessInfo) {
-        app.joinRoom().then(() => setScene('room'));
-      } else {
-        setScene('home');
-      }
-    });
-  }
-
-  const handleShow = (res) => {
-    console.log('wx.onShow', res);
-    const accessInfo = res.query.accessInfo;
-
-    if (!accessInfo) {
-      return;
-    }
-
-    if (!databus.currAccessInfo) {
-      databus.currAccessInfo = accessInfo;
-      app.joinRoom().then(() => setScene('room'));
-      return;
-    }
-
-    if (accessInfo !== databus.currAccessInfo) {
-      wx.showModal({
-        title: '温馨提示',
-        content: '你要离开当前房间，接受对方的对战邀请吗？',
-        success: (res) => {
-          if (!res.confirm) {
-            return;
-          }
-          const room =
-            databus.selfMemberInfo.role === ROLE.OWNER
-              ? 'ownerLeaveRoom'
-              : 'memberLeaveRoom';
-
-          gameServer[room]((res) => {
-            if (res.errCode) {
-              return wx.showToast({
-                title: '离开房间失败！',
-                icon: 'none',
-                duration: 2000,
-              });
-            }
-
-            databus.currAccessInfo = accessInfo;
-
-            app.joinRoom().then(() => setScene('room'));
-          });
-        },
-      });
-    }
-  }
 
   if (loading) {
     return null;

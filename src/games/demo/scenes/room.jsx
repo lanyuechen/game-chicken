@@ -30,6 +30,20 @@ export default () => {
       gameServer.getRoomInfo().then((roomInfo) => {
         setMembers(roomInfo.memberList || []);
       });
+    } else {
+      gameServer.getRoomInfo().then((roomInfo) => {
+        console.log('match pattern roomInfo', roomInfo)
+      });
+
+      const { avatarUrl, nickName } = databus.userInfo;
+      setMembers([
+        { headimg: avatarUrl, nickname: nickName, isEmpty: false },
+        {
+          headimg: 'images/avatar_default.png',
+          nickname: '正在匹配玩家...',
+          isEmpty: false,
+        },
+      ]);
     }
     
     return () => {
@@ -148,7 +162,7 @@ export default () => {
               if (res.confirm) {
                 if (databus.matchPattern) {
                   gameServer.cancelMatch({
-                    match_id: 'CuQJHh6u_WqqGQ1UEzMhnfeIIgqdgCAqw12FNbl6l3E',
+                    matchId: config.matchId,
                   });
                   gameServer.clear();
                   return;

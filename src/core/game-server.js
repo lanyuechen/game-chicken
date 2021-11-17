@@ -1,6 +1,7 @@
 import databus from '@/core/databus';
 import { compareVersion, showTip } from '@/utils/utils';
 import { ROOM_STATE, MSG } from '@/constant';
+import config from '@/config';
 
 class GameServer {
   constructor() {
@@ -365,25 +366,13 @@ class GameServer {
   }
 
   createMatchRoom() {
-    let { avatarUrl, nickName } = databus.userInfo;
-
     this.server.startMatch({
-      match_id: 'CuQJHh6u_WqqGQ1UEzMhnfeIIgqdgCAqw12FNbl6l3E',
+      matchId: config.matchId,
     });
 
     databus.matchPattern = true;
 
     this.event.emit('createRoom');
-
-    this.event.emit('roomInfoChange', {
-      memberList: [
-        { headimg: avatarUrl, nickname: nickName },
-        {
-          headimg: 'images/avatar_default.png',
-          nickname: '正在匹配玩家...',
-        },
-      ],
-    });
   }
 
   joinRoom(accessInfo) {

@@ -15,8 +15,7 @@ class Login {
         if (authSetting['scope.userInfo'] === true) {
           wx.getUserInfo({
             success: (res) => {
-              databus.userInfo = res.userInfo;
-              this.userInfo = res.userInfo;
+              this.userInfo = databus.userInfo = res.userInfo;
               //用户已授权，可以直接调用相关 API
               this.loginCallback(this.userInfo);
             },
