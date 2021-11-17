@@ -30,7 +30,11 @@ export default () => {
       gameServer.getRoomInfo().then((roomInfo) => {
         setMembers(roomInfo.memberList || []);
       });
-    } 
+    }
+    
+    return () => {
+      gameServer.event.off('roomInfoChange');
+    }
   }, []);
 
   if (members.length === 1) {
