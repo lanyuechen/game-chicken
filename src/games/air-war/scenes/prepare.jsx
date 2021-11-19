@@ -3,11 +3,11 @@ import { Container } from '@inlet/react-pixi';
 import useStore from '@/utils/use-store';
 import Dnd from '@/components/dnd';
 
-import Grid from './grid';
-import Plane from './plane';
+import Grid from '../base/grid';
+import Plane from '../base/plane';
 import config from '../config';
 
-import { generateMatrix } from './utils';
+import { generateMatrix } from '../utils';
 
 export default (props) => {
   const { planes } = props;
@@ -68,7 +68,7 @@ export default (props) => {
 
   return (
     <Container>
-      <Grid />
+      <Grid board={board} />
       {planes.map((plane, i) => (
         <Dnd
           key={i}
@@ -78,7 +78,7 @@ export default (props) => {
           onDragEnd={(plane) => handleDragEnd(plane)}
           draggable
         >
-          <Plane />
+          <Plane key={i} />
         </Dnd>
       ))}
     </Container>

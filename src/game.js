@@ -7,6 +7,7 @@ import { render, AppProvider } from '@inlet/react-pixi';
 import GameEngine from '@/core/game-engine';
 
 import Demo from '@/games/demo';
+import AirWar from '@/games/air-war';
 
 const gameEngine = new GameEngine();
 
@@ -14,7 +15,8 @@ const Game = () => {
   return (
     <AppProvider value={gameEngine}>
       <Router>
-        <Demo />
+        {/* <Demo /> */}
+        <AirWar />
       </Router>
     </AppProvider>
   );

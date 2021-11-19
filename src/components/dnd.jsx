@@ -8,8 +8,8 @@ export default (props) => {
   const current = ref.current;
 
   useEffect(() => {
-    current.x = x;
-    current.y = y;
+    ref.current.x = x;
+    ref.current.y = y;
   }, []);
 
 
