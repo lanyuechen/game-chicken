@@ -6,8 +6,24 @@ import Prepare from './scenes/prepare';
 
 export default () => {
   const planes = useState([
-    { active: false },
-    { active: false },
+    {
+      active: false,
+      matrix: [
+        [0, 0, 2, 0, 0],
+        [1, 1, 1, 1, 1],
+        [0, 0, 1, 0, 0],
+        [0, 1, 1, 1, 0],
+      ]
+    },
+    {
+      active: false,
+      matrix: [
+        [0, 0, 2, 0, 0],
+        [1, 1, 1, 1, 1],
+        [0, 0, 1, 0, 0],
+        [0, 1, 1, 1, 0],
+      ]
+    },
   ]);
   
   return (

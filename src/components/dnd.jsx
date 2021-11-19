@@ -2,41 +2,40 @@ import React, { useEffect, useRef } from 'react';
 import { Container } from '@inlet/react-pixi';
 
 export default (props) => {
-  const { x, y, draggable, onDragStart, onDrag, onDragEnd, children } = props;
+  const { defaultPosition = {}, draggable, onDragStart, onDrag, onDragEnd, children } = props;
   const ref = useRef();
 
-  const current = ref.current;
-
   useEffect(() => {
-    ref.current.x = x;
-    ref.current.y = y;
+    ref.current.x = defaultPosition.x || 0;
+    ref.current.y = defaultPosition.y || 0;
   }, []);
 
 
   const handleDragMove = () => {
-    if (current.dragging) {
-      const { x, y } = current.data.getLocalPosition(current.parent);
-      current.x = x - current.offset.x;
-      current.y = y - current.offset.y;
-      onDrag && onDrag(current);
+    if (ref.current.dragging) {
+      console.log('[drag move]');
+      const { x, y } = ref.current.data.getLocalPosition(ref.current.parent);
+      ref.current.x = x - ref.current.offset.x;
+      ref.current.y = y - ref.current.offset.y;
+      onDrag && onDrag();
     }
   }
 
   const handleDragStart = (event) => {
-    current.dragging = true;
-    current.data = event.data;
-    current.offset = event.data.getLocalPosition(current);
-    current.originPosition = { x: current.x, y: current.y };
-    onDragStart && onDragStart(current);
+    console.log('[drag start]');
+    ref.current.dragging = true;
+    ref.current.data = event.data;
+    ref.current.offset = event.data.getLocalPosition(ref.current);
+    onDragStart && onDragStart(ref.current);
   }
 
   const handleDragEnd = () => {
-    if (current.dragging) {
-      current.dragging = false;
-      onDragEnd && onDragEnd(current);
-      current.data = null;
-      current.offset = null;
-      current.originPosition = null;
+    console.log('[drag end]');
+    if (ref.current.dragging) {
+      ref.current.dragging = false;
+      onDragEnd && onDragEnd(ref.current);
+      ref.current.data = null;
+      ref.current.offset = null;
     }
   }
 

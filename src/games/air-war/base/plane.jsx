@@ -5,25 +5,25 @@ import Rectangle from "./rectangle";
 
 import config from '../config';
 
-export default () => {
-  const matrix = [
-    [0, 0, 2, 0, 0],
-    [1, 1, 1, 1, 1],
-    [0, 0, 1, 0, 0],
-    [0, 1, 1, 1, 0],
-  ];
+export default (props) => {
+  const { matrix } = props;
 
   return (
     <Container>
-      {matrix.map((row, i) => row.map((col, j) => (
-        <Rectangle
-          key={`${i}-${j}`}
-          x={j * config.gridWidth}
-          y={i * config.gridWidth}
-          width={config.gridWidth}
-          height={config.gridWidth}
-        />
-      )))}
+      {matrix.map((row, i) => row.map((col, j) => {
+        if (!col) {
+          return null;
+        }
+        return (
+          <Rectangle
+            key={`${i}-${j}`}
+            x={j * config.gridWidth}
+            y={i * config.gridWidth}
+            width={config.gridWidth}
+            height={config.gridWidth}
+          />
+        );
+      }))}
     </Container>
   )
 }
