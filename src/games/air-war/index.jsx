@@ -5,7 +5,7 @@ import { Container } from '@inlet/react-pixi';
 import Prepare from './scenes/prepare';
 
 export default () => {
-  const planes = useState([
+  const [planes, setPlanes] = useState([
     {
       active: false,
       matrix: [

@@ -17,10 +17,10 @@ export default (props) => {
   const isCollision = (plane) => {
     const r = plane.matrix.length;
     const c = plane.matrix[0].length;
-    const gx = Math.floor(plane.x / plane.gridWidth);
-    const gy = Math.floor(plane.y / plane.gridWidth);
+    const gx = Math.round(plane.x / config.gridWidth);
+    const gy = Math.round(plane.y / config.gridWidth);
 
-    if (gx < 0 || gx + c >= config.col || gy < 0 || gy + r >= config.row) {
+    if (gx < 0 || gx + c > config.col || gy < 0 || gy + r > config.row) {
       return true;
     }
 
@@ -34,13 +34,35 @@ export default (props) => {
     return false;
   }
 
-  const setBoard = (plane, s) => {
+  const setBoard = (plane) => {
+    const r = plane.matrix.length;
+    const c = plane.matrix[0].length;
     const gx = parseInt(plane.x / config.gridWidth);
     const gy = parseInt(plane.y / config.gridWidth);
+    if (gx < 0 || gx + c > config.col || gy < 0 || gy + r > config.row) {
+      return true;
+    }
     plane.matrix.forEach((m, i) => {
       m.forEach((k ,j) => {
-        if (k > 0 && board[gy + i] && typeof board[gy + i][gx + j] !== undefined) {
-          board[gy + i][gx + j] = s ? k : 0;
+        if (k) {
+          board[gy + i][gx + j] = k;
+        }
+      });
+    });
+  }
+
+  const unsetBoard = (plane) => {
+    const r = plane.matrix.length;
+    const c = plane.matrix[0].length;
+    const gx = parseInt(plane.x / config.gridWidth);
+    const gy = parseInt(plane.y / config.gridWidth);
+    if (gx < 0 || gx + c > config.col || gy < 0 || gy + r > config.row) {
+      return;
+    }
+    plane.matrix.forEach((m, i) => {
+      m.forEach((k ,j) => {
+        if (k && board[gy + i]?.[gx + j]) {
+          board[gy + i][gx + j] = 0;
         }
       });
     });
@@ -48,11 +70,11 @@ export default (props) => {
 
   const handleDragStart = (dnd, plane) => {
     store.originPosition = { x: dnd.x, y: dnd.y };
-    setBoard({
+    unsetBoard({
       x: dnd.x,
       y: dnd.y,
       matrix: plane.matrix,
-    }, false);
+    });
   }
 
   const handleDragEnd = (dnd, plane) => {
@@ -76,7 +98,7 @@ export default (props) => {
       x: dnd.x,
       y: dnd.y,
       matrix: plane.matrix,
-    }, true);
+    });
   }
 
   return (
@@ -86,7 +108,7 @@ export default (props) => {
         <Dnd
           key={i}
           defaultPosition={{
-            x: 100,
+            x: 550,
             y: 100,
           }}
           onDragStart={(dnd) => handleDragStart(dnd, plane)}
