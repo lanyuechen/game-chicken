@@ -8,7 +8,7 @@ const WebpackBar = require('webpackbar');
 module.exports = {
   mode: 'development',
   entry: './src/game.js',
-  // devtool: 'source-map',
+  devtool: 'source-map',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'game.js',

@@ -6,7 +6,7 @@ import Rectangle from "./rectangle";
 import config from '../config';
 
 export default (props) => {
-  const { matrix } = props;
+  const { matrix, color } = props;
 
   return (
     <Container>
@@ -17,6 +17,7 @@ export default (props) => {
         return (
           <Rectangle
             key={`${i}-${j}`}
+            color={color}
             x={j * config.gridWidth}
             y={i * config.gridWidth}
             width={config.gridWidth}

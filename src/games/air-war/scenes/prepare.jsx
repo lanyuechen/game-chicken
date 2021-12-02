@@ -102,20 +102,20 @@ export default (props) => {
   }
 
   return (
-    <Container>
+    <Container x={config.margin} y={config.margin}>
       <Grid board={board} />
       {planes.map((plane, i) => (
         <Dnd
           key={i}
           defaultPosition={{
-            x: 550,
+            x: config.gridWidth * config.col + config.margin * 2,
             y: 100,
           }}
           onDragStart={(dnd) => handleDragStart(dnd, plane)}
           onDragEnd={(dnd) => handleDragEnd(dnd, plane)}
           draggable
         >
-          <Plane key={i} matrix={plane.matrix} />
+          <Plane key={i} matrix={plane.matrix} color={plane.color} />
         </Dnd>
       ))}
     </Container>

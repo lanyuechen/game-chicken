@@ -8,6 +8,7 @@ export default () => {
   const [planes, setPlanes] = useState([
     {
       active: false,
+      color: 0x0000ff,
       matrix: [
         [0, 0, 2, 0, 0],
         [1, 1, 1, 1, 1],
@@ -17,6 +18,17 @@ export default () => {
     },
     {
       active: false,
+      color: 0x00ff00,
+      matrix: [
+        [0, 0, 2, 0, 0],
+        [1, 1, 1, 1, 1],
+        [0, 0, 1, 0, 0],
+        [0, 1, 1, 1, 0],
+      ]
+    },
+    {
+      active: false,
+      color: 0xff0000,
       matrix: [
         [0, 0, 2, 0, 0],
         [1, 1, 1, 1, 1],

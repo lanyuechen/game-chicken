@@ -7,7 +7,7 @@ export default (props) => {
 
   const draw = useCallback((g) => {
     g.clear();
-    g.lineStyle(1, color);
+    g.lineStyle(2, color);
     g.beginFill(color, active ? 0.2 : 0.05);
     g.drawRect(x, y, width, height);
     g.endFill();
