@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container } from '@inlet/react-pixi';
 import useStore from '@/utils/use-store';
-import Dnd from '@/components/dnd';
+import Draggable from '@/components/draggable';
 
 import Grid from '../base/grid';
 import Plane from '../base/plane';
@@ -105,7 +105,7 @@ export default (props) => {
     <Container x={config.margin} y={config.margin}>
       <Grid board={board} />
       {planes.map((plane, i) => (
-        <Dnd
+        <Draggable
           key={i}
           defaultPosition={{
             x: config.gridWidth * config.col + config.margin * 2,
@@ -116,7 +116,7 @@ export default (props) => {
           draggable
         >
           <Plane matrix={plane.matrix} color={plane.color} />
-        </Dnd>
+        </Draggable>
       ))}
     </Container>
   );
