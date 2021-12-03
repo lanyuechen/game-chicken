@@ -9,12 +9,14 @@ export default (props) => {
     g.clear();
     g.lineStyle(2, color);
     g.beginFill(color, active ? 0.2 : 0.05);
-    g.drawRect(x, y, width, height);
+    g.drawRect(0, 0, width, height);
     g.endFill();
-  }, [color, x, y, width, height, active]);
+  }, [color, width, height, active]);
 
   return (
     <Graphics
+      x={x}
+      y={y}
       draw={draw}
       pointerdown={() => setActive(true)}
       pointerup={() => setActive(false)}
