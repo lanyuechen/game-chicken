@@ -5,6 +5,8 @@ const deviceinfo = getDeviceInfo();
 const VIEW_WIDTH = 667;
 const VIEW_HEIGHT = 375;
 const MARGIN = 25;
+const ROW = 10;
+const COL = 12;
 
 export default {
   dpr: 2,
@@ -18,9 +20,9 @@ export default {
   GAME_HEIGHT: VIEW_HEIGHT * 2,
 
   margin: MARGIN,
-  row: 10,
-  col: 12,
-  gridWidth: (VIEW_HEIGHT * 2 - MARGIN * 2) / 10,
+  row: ROW,
+  col: COL,
+  gridWidth: Math.floor((VIEW_HEIGHT * 2 - MARGIN * 2) / ROW),
 
   deviceinfo,
 

@@ -115,7 +115,7 @@ export default (props) => {
           onDragEnd={(dnd) => handleDragEnd(dnd, plane)}
           draggable
         >
-          <Plane key={i} matrix={plane.matrix} color={plane.color} />
+          <Plane matrix={plane.matrix} color={plane.color} />
         </Dnd>
       ))}
     </Container>
