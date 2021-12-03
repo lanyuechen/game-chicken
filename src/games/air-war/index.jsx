@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router';
 import { Container } from '@inlet/react-pixi';
 
 import Prepare from './scenes/prepare';
+import Test from './scenes/test';
 
 export default () => {
   const [planes, setPlanes] = useState([
@@ -41,11 +42,17 @@ export default () => {
   return (
     <Container>
       <Routes>
-        <Route path="/" element={<Navigate to="/prepare" replace />} />
+        <Route path="/" element={<Navigate to="/test" replace />} />
         <Route
           path="/prepare"
           element={(
             <Prepare planes={planes} />
+          )}
+        />
+        <Route
+          path="/test"
+          element={(
+            <Test />
           )}
         />
       </Routes>
